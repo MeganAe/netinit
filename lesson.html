@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leçon — NetInit</title>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<header class="nav"><div id="nav-root"></div></header>
+
+<main>
+  <section class="section" style="padding-top:40px; max-width:760px; margin:0 auto;">
+    <div class="container" style="max-width:720px;">
+      <span class="address-crumb" id="crumb"><span class="dot"></span>netinit.ucb/leçons/…</span>
+
+      <article class="lesson-article" id="lesson-article">
+        <div class="skeleton" style="height:28px; width:60%;"></div>
+        <div class="skeleton" style="height:16px; width:30%; margin-top:14px;"></div>
+        <div class="skeleton" style="height:200px; margin-top:26px;"></div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>NetInit — Projet tutoré, Université Catholique de Bukavu, 2025 — 2026.</p>
+  </div>
+</footer>
+
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    const user = await requireUser();
+    if (!user) return;
+    await mountNav("/dashboard.html");
+
+    const id = new URLSearchParams(window.location.search).get("id");
+    if (!id) { window.location.href = "/dashboard.html"; return; }
+
+    let lesson;
+    try {
+      lesson = await api(`/api/lessons/${id}`);
+    } catch (_) {
+      document.getElementById("lesson-article").innerHTML = `<p class="center-note">Cette leçon est introuvable.</p>`;
+      return;
+    }
+
+    document.getElementById("crumb").innerHTML = `<span class="dot"></span>netinit.ucb/leçons/${lesson.ordre}-${lesson.titre.toLowerCase().split(" ").slice(0,2).join("-")}`;
+
+    document.getElementById("lesson-article").innerHTML = `
+      <div class="meta">Leçon ${lesson.ordre} / 4</div>
+      <h1>${lesson.titre}</h1>
+      <div class="prose">${renderProse(lesson.contenu)}</div>
+      <div class="article-actions">
+        <a href="/dashboard.html" class="btn btn-ghost">← Retour au tableau de bord</a>
+        <a href="/quiz.html?id=${lesson.id}" class="btn btn-accent">
+          ${lesson.terminee ? `Refaire le quiz (dernier score ${lesson.score}/${lesson.total})` : "Passer au quiz"}
+        </a>
+      </div>
+    `;
+  })();
+</script>
+</body>
+</html>

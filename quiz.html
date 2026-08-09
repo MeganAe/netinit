@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quiz — NetInit</title>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<header class="nav"><div id="nav-root"></div></header>
+
+<main>
+  <section class="section" style="padding-top:40px;">
+    <div class="container" style="max-width:640px;">
+      <span class="address-crumb" id="crumb"><span class="dot"></span>netinit.ucb/quiz/…</span>
+
+      <div class="quiz-card" id="quiz-card">
+        <div class="skeleton" style="height:20px; width:40%;"></div>
+        <div class="skeleton" style="height:100px; margin-top:20px;"></div>
+        <div class="skeleton" style="height:100px; margin-top:14px;"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>NetInit — Projet tutoré, Université Catholique de Bukavu, 2025 — 2026.</p>
+  </div>
+</footer>
+
+<script src="/js/common.js"></script>
+<script>
+  (async () => {
+    const user = await requireUser();
+    if (!user) return;
+    await mountNav("/dashboard.html");
+
+    const id = new URLSearchParams(window.location.search).get("id");
+    if (!id) { window.location.href = "/dashboard.html"; return; }
+
+    let questions, lesson;
+    try {
+      [lesson, questions] = await Promise.all([
+        api(`/api/lessons/${id}`),
+        api(`/api/lessons/${id}/quiz`),
+      ]);
+    } catch (_) {
+      document.getElementById("quiz-card").innerHTML = `<p class="center-note">Ce quiz est introuvable.</p>`;
+      return;
+    }
+
+    document.getElementById("crumb").innerHTML = `<span class="dot"></span>netinit.ucb/quiz/${lesson.ordre}-${lesson.titre.toLowerCase().split(" ").slice(0,2).join("-")}`;
+
+    const card = document.getElementById("quiz-card");
+    const answers = {};
+
+    function renderQuiz() {
+      card.innerHTML = `
+        <div class="quiz-progress">Leçon ${lesson.ordre} / 4 · ${questions.length} question(s)</div>
+        <h1 style="font-size:1.4rem; margin-bottom:18px;">Quiz — ${lesson.titre}</h1>
+        ${questions.map((q, qi) => `
+          <div class="question-block">
+            <div class="q-text">${qi + 1}. ${q.question}</div>
+            ${q.options.map((opt, oi) => `
+              <label class="option" data-qid="${q.id}" data-value="${escapeHtml(opt)}">
+                <input type="radio" name="q-${q.id}" value="${escapeHtml(opt)}" />
+                ${opt}
+              </label>
+            `).join("")}
+          </div>
+        `).join("")}
+        <div class="form-error" id="quiz-error"></div>
+        <button class="btn btn-accent btn-block" id="submit-quiz" style="margin-top:10px;" disabled>Valider mes réponses</button>
+      `;
+
+      card.querySelectorAll(".option").forEach((label) => {
+        label.addEventListener("click", () => {
+          const qid = label.dataset.qid;
+          answers[qid] = label.dataset.value;
+          card.querySelectorAll(`.option[data-qid="${qid}"]`).forEach((l) => l.classList.remove("selected"));
+          label.classList.add("selected");
+          label.querySelector("input").checked = true;
+          updateSubmitState();
+        });
+      });
+
+      document.getElementById("submit-quiz").addEventListener("click", submitQuiz);
+      updateSubmitState();
+    }
+
+    function updateSubmitState() {
+      const btn = document.getElementById("submit-quiz");
+      const answered = Object.keys(answers).length;
+      btn.disabled = answered < questions.length;
+      btn.textContent = answered < questions.length
+        ? `Répondez à toutes les questions (${answered}/${questions.length})`
+        : "Valider mes réponses";
+    }
+
+    async function submitQuiz() {
+      const btn = document.getElementById("submit-quiz");
+      btn.disabled = true;
+      btn.textContent = "Envoi...";
+      try {
+        const result = await api(`/api/lessons/${id}/quiz`, { method: "POST", body: { reponses: answers } });
+        renderResult(result);
+      } catch (err) {
+        document.getElementById("quiz-error").textContent = err.message;
+        document.getElementById("quiz-error").classList.add("show");
+        btn.disabled = false;
+      }
+    }
+
+    function renderResult(result) {
+      const pass = result.score >= Math.ceil(result.total * 0.6);
+      card.innerHTML = `
+        <div class="quiz-result">
+          <div class="score ${pass ? "" : "low"}">${result.score}/${result.total}</div>
+          <p>${pass ? "Bien joué, cette leçon est validée." : "Vous pouvez relire la leçon et retenter le quiz."}</p>
+          <div style="margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <a href="/dashboard.html" class="btn btn-ghost">Tableau de bord</a>
+            ${pass ? `<a href="/progress.html" class="btn btn-primary">Voir ma progression</a>` : `<a href="/lesson.html?id=${id}" class="btn btn-accent">Relire la leçon</a>`}
+          </div>
+        </div>
+      `;
+    }
+
+    renderQuiz();
+  })();
+</script>
+</body>
+</html>

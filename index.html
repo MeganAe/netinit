@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NetInit — Initiation à Internet pour les nouveaux étudiants de l'UCB</title>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<header class="nav"><div id="nav-root"></div></header>
+
+<main>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Projet tutoré · UCB · Département d'Informatique</span>
+        <h1>Internet, expliqué <em>simplement</em>, pour bien démarrer à l'UCB.</h1>
+        <p class="lead">NetInit accompagne les nouveaux étudiants qui découvrent Internet : naviguer, chercher, écrire un email et rester en sécurité en ligne — quatre leçons courtes, à son propre rythme.</p>
+        <div class="hero-actions">
+          <a href="/register.html" class="btn btn-accent">Créer mon compte</a>
+          <a href="/login.html" class="btn btn-ghost">J'ai déjà un compte</a>
+        </div>
+      </div>
+
+      <div class="browser-mock" aria-hidden="true">
+        <div class="browser-bar">
+          <span class="signal-mark"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+          <span class="address">netinit.ucb<span class="caret"></span></span>
+        </div>
+        <div class="browser-body">
+          <span class="tag">Leçon 2 / 4</span>
+          <h3>Faire une recherche efficace</h3>
+          <p>Des mots-clés précis, des guillemets pour une expression exacte, et un œil sur la source avant d'y croire.</p>
+          <div class="fake-lines"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Un seul thème, quatre leçons</h2>
+        <p>Pas de dispersion : NetInit se concentre uniquement sur les bases d'Internet, dans l'ordre où elles sont utiles au quotidien.</p>
+      </div>
+      <div class="lesson-grid" id="preview-grid">
+        <!-- Rempli par script.js à partir du contenu réel des leçons -->
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head">
+        <h2>Comment ça marche</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="n">01</span>
+          <h3>Créer un compte</h3>
+          <p>Une inscription simple avec un nom, un email et un mot de passe.</p>
+        </div>
+        <div class="step">
+          <span class="n">02</span>
+          <h3>Suivre les leçons</h3>
+          <p>Quatre leçons courtes, à lire dans l'ordre ou dans le désordre.</p>
+        </div>
+        <div class="step">
+          <span class="n">03</span>
+          <h3>Vérifier ses acquis</h3>
+          <p>Un petit quiz après chaque leçon, et une progression visible à tout moment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>NetInit — Projet tutoré, Université Catholique de Bukavu, 2025 — 2026.</p>
+    <p>Réalisé par Sifa Munguakonwa Christine</p>
+  </div>
+</footer>
+
+<script src="/js/common.js"></script>
+<script>
+  mountNav("/index.html");
+
+  const preview = [
+    { icone: "compass", titre: "Découvrir Internet et le navigateur", resume: "Ce qu'est Internet, et comment se déplacer avec un navigateur web." },
+    { icone: "search", titre: "Faire une recherche efficace", resume: "Utiliser un moteur de recherche pour trouver une information fiable." },
+    { icone: "mail", titre: "Créer et utiliser une adresse email", resume: "Créer une boîte mail, envoyer un message, respecter quelques règles." },
+    { icone: "shield", titre: "Sécurité et bonnes pratiques en ligne", resume: "Protéger ses données et reconnaître les tentatives d'arnaque." },
+  ];
+  document.getElementById("preview-grid").innerHTML = preview.map((l, i) => `
+    <div class="lesson-card">
+      <div class="top-row">
+        <span class="lesson-num">Leçon ${i + 1} / 4</span>
+        <span class="icon" style="color:var(--amber-dark);">${iconMarkup(l.icone)}</span>
+      </div>
+      <h3>${l.titre}</h3>
+      <p>${l.resume}</p>
+    </div>
+  `).join("");
+</script>
+</body>
+</html>
