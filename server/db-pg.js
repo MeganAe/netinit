@@ -4,8 +4,13 @@
 // dès qu'une base "Postgres" est créée et rattachée au projet depuis
 // l'onglet Storage du dashboard. Voir README.md pour la procédure.
 
-const { sql } = require("@vercel/postgres");
+const { neon } = require("@neondatabase/serverless");
 const { LECONS, QUIZ } = require("./content");
+
+// Neon (utilisé nativement par l'intégration Postgres de Vercel) injecte
+// DATABASE_URL ; certains projets migrés depuis l'ancien "Vercel Postgres"
+// peuvent encore avoir POSTGRES_URL. On accepte les deux.
+const sql = neon(process.env.DATABASE_URL || process.env.POSTGRES_URL, { fullResults: true });
 
 let ready = null;
 

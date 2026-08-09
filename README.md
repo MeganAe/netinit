@@ -13,7 +13,7 @@ leçons courtes suivies chacune d'un quiz, avec suivi de progression.
 - **Authentification** : cookie JWT httpOnly (sans état — compatible serverless)
 - **Base de données** :
   - En **local** : SQLite via le module natif `node:sqlite` — zéro configuration
-  - Sur **Vercel** : Postgres (Vercel Postgres) — bascule automatique dès que `POSTGRES_URL` est présente
+  - Sur **Vercel** : Postgres via l'intégration **Neon** (Marketplace Vercel) — bascule automatique dès que `DATABASE_URL` (ou `POSTGRES_URL`) est présente
 
 ## Déployer sur Vercel
 
@@ -21,17 +21,28 @@ leçons courtes suivies chacune d'un quiz, avec suivi de progression.
 
 Vercel importe un projet depuis un dépôt Git.
 
-### 2. Importer le projet sur vercel.com
+### 2. Importer le projet sur vercel.com (premier déploiement)
 
 Dashboard Vercel → **Add New → Project** → sélectionner le dépôt. Aucune
-configuration de build à changer : `vercel.json` s'en charge.
+configuration de build à changer : `vercel.json` s'en charge. Déployer une
+première fois — c'est nécessaire pour pouvoir ensuite rattacher une base de
+données au projet (le projet doit exister au préalable).
 
-### 3. Ajouter une base de données Postgres
+À ce stade, le site s'affiche mais les pages qui appellent l'API
+(inscription, connexion...) renverront une erreur : c'est normal, il manque
+encore la base de données. Étape suivante.
+
+### 3. Ajouter une base de données Postgres (via Neon)
+
+Depuis quelque temps, Vercel ne propose plus "Vercel Postgres" en direct :
+la base Postgres est fournie par **Neon**, intégré nativement à Vercel.
 
 Dans le projet Vercel → onglet **Storage** → **Create Database** → choisir
-**Postgres** → la rattacher au projet. Vercel ajoute automatiquement la
-variable d'environnement `POSTGRES_URL` (et ses variantes) — rien à copier
-manuellement.
+le provider **Neon** (Postgres) → suivre l'assistant (région, plan gratuit).
+Une fois la base créée, cliquer sur **Connect to Project** et sélectionner
+votre projet NetInit. Vercel injecte alors automatiquement les variables
+`DATABASE_URL` (et éventuellement `POSTGRES_URL`) dans le projet — rien à
+copier manuellement.
 
 ### 4. Définir la variable JWT_SECRET
 
@@ -46,10 +57,13 @@ Pour générer une valeur sûre :
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-### 5. Déployer
+### 5. Redéployer
 
-**Deploy**. Au premier appel à l'API, les tables sont créées automatiquement
-et le contenu des 4 leçons + quiz est inséré (voir `server/db-pg.js`).
+Le rattachement de la base déclenche généralement un redéploiement
+automatique. Sinon : onglet **Deployments** → **⋯** sur le dernier
+déploiement → **Redeploy**. Au premier appel à l'API après ce
+redéploiement, les tables sont créées automatiquement et le contenu des
+4 leçons + quiz est inséré (voir `server/db-pg.js`).
 
 ## Développement local
 
