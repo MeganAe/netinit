@@ -171,7 +171,6 @@
 
   <!-- Statistiques d'Apprentissage -->
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8" id="profile-stats"></div>
-  </div>
 
   <!-- Modifier les Informations du Profil -->
   <div class="bg-surface-container-lowest border border-outline-variant/60 rounded-3xl soft-shadow p-6 md:p-8 mb-8">
@@ -194,9 +193,6 @@
       <div>
         <div class="flex items-center justify-between mb-2">
           <label class="block text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant">Avatar & Image</label>
-          <button type="button" id="avatar-reroll" class="text-primary text-xs font-bold font-body flex items-center gap-1">
-            <span class="material-symbols-outlined text-sm">shuffle</span> Mélanger les presets
-          </button>
         </div>
         <div class="grid grid-cols-6 gap-2 mb-3" id="avatar-grid"></div>
         <input type="url" id="edit-avatar-url" placeholder="Ou collez le lien d'une image perso (https://...)" class="w-full border border-outline-variant/80 rounded-xl px-4 py-2 text-xs font-body bg-surface-container-low" />
@@ -219,8 +215,6 @@
 
 </div>
 </main>
-
-
 
 <script src="/js/common.js"></script>
 <script>
@@ -268,6 +262,9 @@
       </div>
     `;
 
+    `;
+
+
     // Formulaire d'édition
     document.getElementById("edit-nom").value = currentUser.nom || "";
     document.getElementById("edit-bio").value = currentUser.bio || "";
@@ -295,8 +292,6 @@
       });
     });
   }
-
-  document.getElementById("avatar-reroll").addEventListener("click", renderAvatarGrid);
   document.getElementById("edit-avatar-url").addEventListener("input", (e) => {
     if (e.target.value.trim().length > 5) {
       selectedSeed = e.target.value.trim();
@@ -322,8 +317,6 @@
       btn.disabled = false;
     }
   });
-
 </script>
-
 </body>
 </html>

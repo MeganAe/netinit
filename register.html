@@ -15,41 +15,21 @@
             theme: {
                 extend: {
                     colors: {
-                        background: "#faf5ee",
-                        surface: "#faf5ee",
+                        background: "#faf5ee", surface: "#faf5ee",
                         "surface-container-lowest": "#ffffff",
                         "surface-container-low": "#f6f0e8",
                         "surface-container": "#f2ece4",
                         "surface-container-high": "#ece6dc",
                         "surface-variant": "#ece6dc",
-                        "outline": "#9a9088",
-                        "outline-variant": "#d8d0c8",
-                        "on-background": "#3a302a",
-                        "on-surface-variant": "#605850",
-                        primary: "#c2652a",
-                        "primary-container": "#fbe8d8",
-                        "primary-fixed": "#fbe8d8",
+                        "outline": "#9a9088", "outline-variant": "#d8d0c8",
+                        "on-background": "#3a302a", "on-surface-variant": "#605850",
+                        primary: "#c2652a", "primary-container": "#fbe8d8",
                         "on-primary": "#ffffff",
-                        "on-primary-container": "#7a3a10",
-                        "on-primary-fixed": "#401a08",
-                        secondary: "#78706a",
-                        "secondary-container": "#eae2da",
-                        "on-secondary-container": "#3a302a",
-                        tertiary: "#8c3c3c",
-                        "tertiary-container": "#fce0e0",
-                        "on-tertiary-container": "#5c2020",
-                        success: "#2f7d4f",
-                        "success-container": "#e1f0e5",
-                        error: "#c0392b",
-                        "error-container": "#fce4e0",
-                        gold: "#b8860b",
-                        silver: "#8a8f98",
-                        bronze: "#a1622e",
+                        success: "#2f7d4f", error: "#c0392b", "error-container": "#fce4e0",
                     },
                     borderRadius: { DEFAULT: "0.5rem", lg: "0.75rem", xl: "1rem", full: "9999px" },
                     fontFamily: {
                         headline: ["EB Garamond", "serif"],
-                        display: ["EB Garamond", "serif"],
                         body: ["Manrope", "sans-serif"],
                         label: ["Manrope", "sans-serif"],
                     },
@@ -66,86 +46,67 @@
         .dark .text-on-background { color: #f5efe6 !important; }
         .dark .text-on-surface-variant { color: #b8aea6 !important; }
         .dark .border-outline-variant\/60 { border-color: rgba(184, 174, 166, 0.2) !important; }
-        .material-symbols-outlined {
-            font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal;
-            font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none;
-            display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr;
-        }
+        .material-symbols-outlined { font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr; }
         .soft-shadow { box-shadow: 0 4px 24px rgba(58,48,42,0.08); }
-        .avatar-option { border-radius: 9999px; border: 2px solid #d8d0c8; padding: 2px; cursor: pointer; background: #fff; transition: border-color .15s, transform .15s; }
+        input:focus { outline: none; border-color: #c2652a !important; box-shadow: 0 0 0 3px #fbe8d8; }
+        .avatar-option { border-radius: 9999px; border: 2px solid #d8d0c8; padding: 2px; cursor: pointer; transition: border-color .15s, transform .15s; }
         .avatar-option:hover { transform: translateY(-2px); }
         .avatar-option.selected { border-color: #c2652a; box-shadow: 0 0 0 3px #fbe8d8; }
         .avatar-option img { width: 100%; height: 100%; border-radius: 9999px; display: block; object-fit: cover; }
-        input:focus { outline: none; border-color: #c2652a !important; box-shadow: 0 0 0 3px #fbe8d8; }
 </style>
 </head>
 <body class="font-body min-h-screen flex flex-col bg-background text-on-background">
 
-
+<header class="w-full px-6 md:px-12 py-5 flex items-center justify-between border-b border-outline-variant/60 bg-background/90 backdrop-blur-md sticky top-0 z-40">
+<a href="/index.html" class="font-headline text-2xl font-bold text-primary tracking-tight">NetInit</a>
+<a href="/index.html" class="text-on-surface-variant hover:text-primary transition-colors">
+  <span class="material-symbols-outlined">close</span>
+</a>
+</header>
 
 <main class="flex-1 flex items-center justify-center p-6 md:p-12">
   <div class="max-w-5xl w-full grid md:grid-cols-12 rounded-3xl overflow-hidden border border-outline-variant/60 bg-surface-container-lowest soft-shadow">
     
     <!-- Panneau Gauche : Presentation Entreprise -->
-    <div class="md:col-span-6 bg-gradient-to-br from-primary-container/80 via-surface-container-low to-background p-8 md:p-12 flex flex-col justify-between border-b md:border-b-0 md:border-r border-outline-variant/60">
+    <div class="md:col-span-5 bg-gradient-to-br from-primary-container/80 via-surface-container-low to-background p-8 md:p-12 flex flex-col justify-between border-b md:border-b-0 md:border-r border-outline-variant/60">
       <div>
         <div class="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold font-label uppercase tracking-wider mb-6">
-          <span class="material-symbols-outlined text-sm">how_to_reg</span> Inscription Gratuit
+          <span class="material-symbols-outlined text-sm">group_add</span> Rejoignez la communauté
         </div>
-        <h1 class="font-headline text-3xl md:text-5xl font-bold leading-tight mb-4 text-on-background">Rejoignez la communauté <em class="text-primary not-italic">NetInit</em></h1>
-        <p class="text-on-surface-variant font-body text-sm md:text-base leading-relaxed mb-8">Créez votre compte apprenant pour suivre votre progression, réussir vos quiz et obtenir votre attestation officielle.</p>
+        <h1 class="font-headline text-3xl md:text-5xl font-bold leading-tight mb-4 text-on-background">Commencez <br><em class="text-primary not-italic">votre parcours</em></h1>
+        <p class="text-on-surface-variant font-body text-sm md:text-base leading-relaxed mb-8">Développez vos compétences numériques à votre rythme avec 10 leçons fondamentales gratuites.</p>
 
         <div class="space-y-4">
           <div class="flex items-center gap-3 bg-surface-container-lowest/80 p-3 rounded-xl border border-outline-variant/40">
-            <span class="material-symbols-outlined text-primary">auto_stories</span>
+            <span class="material-symbols-outlined text-primary">auto_awesome</span>
             <div>
-              <p class="text-xs font-bold">10 Leçons Complètes</p>
-              <p class="text-[11px] text-on-surface-variant">De la recherche web à l'IA générative</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3 bg-surface-container-lowest/80 p-3 rounded-xl border border-outline-variant/40">
-            <span class="material-symbols-outlined text-primary">quiz</span>
-            <div>
-              <p class="text-xs font-bold">40 Questions de Quiz</p>
-              <p class="text-[11px] text-on-surface-variant">Validation continue des acquis</p>
+              <p class="text-xs font-bold">Apprentissage Interactif</p>
+              <p class="text-[11px] text-on-surface-variant">Schémas, quiz et exemples concrets</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-10 pt-6 border-t border-outline-variant/40 text-xs text-on-surface-variant font-body">
-        Plateforme garantie sans publicité et respectueuse de vos données personnelles.
+      <div class="mt-10 pt-6 border-t border-outline-variant/40 text-xs text-on-surface-variant font-body flex items-center justify-between">
+        <span>© NetInit Platform</span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-success"></span> Serveur En Ligne</span>
       </div>
     </div>
 
     <!-- Panneau Droit : Formulaire d'Inscription -->
-    <div class="md:col-span-6 p-8 md:p-12 flex flex-col justify-center bg-surface-container-lowest">
-      <div class="mb-6">
-        <h2 class="font-headline text-3xl font-bold mb-1 text-on-background">Créer un compte</h2>
-        <p class="text-on-surface-variant text-sm font-body">Renseignez vos informations ci-dessous.</p>
-      </div>
-
-      <!-- Personnalisation d'Avatar -->
-      <div class="bg-surface-container-low border border-outline-variant/40 rounded-2xl p-4 mb-6">
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant">Choisissez votre photo d'avatar</span>
-          <button type="button" id="avatar-reroll" class="text-primary text-xs font-bold font-body flex items-center gap-1 hover:underline">
-            <span class="material-symbols-outlined text-sm">shuffle</span> Mélanger
-          </button>
-        </div>
-        <div class="grid grid-cols-6 gap-2 mb-3" id="avatar-grid"></div>
-        <div class="relative mt-2">
-          <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-sm">link</span>
-          <input type="url" id="custom-avatar-url" placeholder="Ou coller le lien d'une photo (URL https://...)" class="w-full border border-outline-variant/60 rounded-xl pl-9 pr-3 py-1.5 text-xs font-body bg-surface-container-lowest" />
-        </div>
+    <div class="md:col-span-7 p-8 md:p-12 flex flex-col justify-center bg-surface-container-lowest">
+      <div class="mb-8">
+        <h2 class="font-headline text-3xl font-bold mb-2 text-on-background">Créer un compte apprenant</h2>
+        <p class="text-on-surface-variant text-sm font-body">Renseignez vos informations pour commencer.</p>
       </div>
 
       <form id="register-form" novalidate>
+        
         <div class="mb-4">
           <label class="block text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant mb-2" for="nom">Nom complet</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-3 text-on-surface-variant text-xl">person</span>
-            <input class="w-full border border-outline-variant/80 rounded-xl pl-11 pr-4 py-3 font-body text-sm bg-surface-container-low focus:bg-surface-container-lowest transition-colors" id="nom" type="text" placeholder="Ex: Jean Dupont" required/>
+            <input class="w-full border border-outline-variant/80 rounded-xl pl-11 pr-4 py-3 font-body text-sm bg-surface-container-low focus:bg-surface-container-lowest transition-colors" id="nom" type="text" placeholder="Jean Dupont" required/>
           </div>
         </div>
 
@@ -153,7 +114,7 @@
           <label class="block text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant mb-2" for="email">Adresse email</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-3 text-on-surface-variant text-xl">mail</span>
-            <input class="w-full border border-outline-variant/80 rounded-xl pl-11 pr-4 py-3 font-body text-sm bg-surface-container-low focus:bg-surface-container-lowest transition-colors" id="email" type="email" placeholder="jean.dupont@exemple.com" required/>
+            <input class="w-full border border-outline-variant/80 rounded-xl pl-11 pr-4 py-3 font-body text-sm bg-surface-container-low focus:bg-surface-container-lowest transition-colors" id="email" type="email" placeholder="apprenant@exemple.com" required/>
           </div>
         </div>
 
@@ -161,11 +122,17 @@
           <label class="block text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant mb-2" for="mot_de_passe">Mot de passe</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3.5 top-3 text-on-surface-variant text-xl">lock</span>
-            <input class="w-full border border-outline-variant/80 rounded-xl pl-11 pr-11 py-3 font-body text-sm bg-surface-container-low focus:bg-surface-container-lowest transition-colors" id="mot_de_passe" type="password" placeholder="Au moins 6 caractères" required minlength="6"/>
+            <input class="w-full border border-outline-variant/80 rounded-xl pl-11 pr-11 py-3 font-body text-sm bg-surface-container-low focus:bg-surface-container-lowest transition-colors" id="mot_de_passe" type="password" placeholder="Min. 6 caractères" required/>
             <button type="button" onclick="togglePasswordVisibility('mot_de_passe', 'pass-eye')" class="absolute right-3.5 top-3 text-on-surface-variant hover:text-primary">
               <span class="material-symbols-outlined text-xl" id="pass-eye">visibility</span>
             </button>
           </div>
+        </div>
+
+        <div class="mb-6">
+          <label class="block text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant mb-3">Choisissez un avatar</label>
+          <div class="grid grid-cols-6 gap-2 mb-3" id="avatar-grid"></div>
+          <input type="url" id="custom-avatar-url" placeholder="Ou collez un lien (https://...)" class="w-full border border-outline-variant/80 rounded-xl px-4 py-2 text-xs font-body bg-surface-container-low" />
         </div>
 
         <div class="text-xs text-error font-body mb-4 hidden p-3 rounded-xl bg-error-container/50 border border-error/30" id="form-error"></div>
@@ -188,49 +155,42 @@
 
 <script src="/js/common.js"></script>
 <script>
+  let selectedSeed = null;
+
   function togglePasswordVisibility(inputId, eyeId) {
     const input = document.getElementById(inputId);
     const eye = document.getElementById(eyeId);
-    if (input.type === "password") {
-      input.type = "text";
-      eye.textContent = "visibility_off";
-    } else {
-      input.type = "password";
-      eye.textContent = "visibility";
-    }
+    if (input.type === "password") { input.type = "text"; eye.textContent = "visibility_off"; }
+    else { input.type = "password"; eye.textContent = "visibility"; }
   }
 
-  let selectedSeed = null;
-  function randomSeed() { return Math.random().toString(36).slice(2, 10); }
-
   function renderAvatarGrid() {
-    const seeds = Array.from({ length: 6 }, randomSeed);
-    selectedSeed = seeds[0];
+    const seeds = Array.from({ length: 12 }, () => Math.random().toString(36).slice(2, 10));
+    if (!selectedSeed) selectedSeed = seeds[0];
     const grid = document.getElementById("avatar-grid");
-    grid.innerHTML = seeds.map((s, i) => `
-      <button type="button" class="avatar-option h-10 w-10 ${i === 0 ? "selected" : ""}" data-seed="${s}">
+    grid.innerHTML = seeds.map((s) => `
+      <button type="button" class="avatar-option h-10 w-10 ${selectedSeed === s ? "selected" : ""}" data-seed="${s}">
         <img src="${avatarUrl(s, 64)}" alt="Avatar" />
       </button>
     `).join("");
     grid.querySelectorAll(".avatar-option").forEach((btn) => {
       btn.addEventListener("click", () => {
-        grid.querySelectorAll(".avatar-option").forEach((b) => b.classList.remove("selected"));
+        grid.querySelectorAll(".avatar-option").forEach(b => b.classList.remove("selected"));
         btn.classList.add("selected");
         selectedSeed = btn.dataset.seed;
         document.getElementById("custom-avatar-url").value = "";
       });
     });
   }
-  renderAvatarGrid();
-  document.getElementById("avatar-reroll").addEventListener("click", renderAvatarGrid);
 
-  const customUrlInput = document.getElementById("custom-avatar-url");
-  customUrlInput.addEventListener("input", () => {
-    if (customUrlInput.value.trim().length > 5) {
-      selectedSeed = customUrlInput.value.trim();
-      document.querySelectorAll(".avatar-option").forEach((b) => b.classList.remove("selected"));
+  document.getElementById("custom-avatar-url").addEventListener("input", (e) => {
+    if (e.target.value.trim().length > 5) {
+      selectedSeed = e.target.value.trim();
+      document.querySelectorAll(".avatar-option").forEach(b => b.classList.remove("selected"));
     }
   });
+
+  renderAvatarGrid();
 
   const form = document.getElementById("register-form");
   const errorBox = document.getElementById("form-error");
@@ -245,9 +205,11 @@
     const nom = document.getElementById("nom").value.trim();
     const email = document.getElementById("email").value.trim();
     const mot_de_passe = document.getElementById("mot_de_passe").value;
+    const customUrl = document.getElementById("custom-avatar-url").value.trim();
+    const finalSeed = customUrl.length > 5 ? customUrl : selectedSeed;
 
     try {
-      await api("/api/register", { method: "POST", body: { nom, email, mot_de_passe, avatarSeed: selectedSeed } });
+      await api("/api/register", { method: "POST", body: { nom, email, mot_de_passe, avatarSeed: finalSeed } });
       window.location.href = "/dashboard.html";
     } catch (err) {
       errorBox.textContent = err.message;
