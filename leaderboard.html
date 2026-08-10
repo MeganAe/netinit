@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
+<html lang="fr"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Classement — NetInit</title>
@@ -58,151 +57,102 @@
         };
 </script>
 <style>
-        body { background-color: #faf5ee; color: #3a302a; transition: background-color 0.2s, color 0.2s; }
-        .dark body { background-color: #1a1614; color: #ece6dc; }
-        .dark .bg-background { background-color: #1a1614 !important; }
-        .dark .bg-surface { background-color: #241f1c !important; }
-        .dark .bg-surface-container-lowest { background-color: #2b2522 !important; color: #ece6dc !important; }
-        .dark .bg-surface-container-low { background-color: #241f1c !important; }
-        .dark .bg-surface-container { background-color: #2b2522 !important; }
-        .dark .bg-surface-container-high { background-color: #342c28 !important; }
-        .dark .text-on-background { color: #f5efe6 !important; }
-        .dark .text-on-surface-variant { color: #b8aea6 !important; }
-        .dark .border-outline-variant\/60 { border-color: rgba(184, 174, 166, 0.2) !important; }
-        .dark .border-outline-variant\/50 { border-color: rgba(184, 174, 166, 0.2) !important; }
+        body { background-color: #faf5ee; color: #3a302a; }
         .material-symbols-outlined {
             font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal;
             font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none;
             display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr;
         }
+        .browser-mockup { box-shadow: 0 10px 40px rgba(58,48,42,0.10); border: 1px solid #d8d0c8; }
         .soft-shadow { box-shadow: 0 2px 16px rgba(58,48,42,0.06); }
+        /* Barres de signal = progression (4 leçons) */
+        .signal-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
+        .signal-bars i { display: block; width: 5px; border-radius: 2px; background: #d8d0c8; }
+        .signal-bars i.on { background: #c2652a; }
+        .signal-bars i:nth-child(1) { height: 7px; } .signal-bars i:nth-child(2) { height: 11px; }
+        .signal-bars i:nth-child(3) { height: 15px; } .signal-bars i:nth-child(4) { height: 20px; }
+        /* Avatars */
+        .avatar-option { border-radius: 9999px; border: 2px solid #d8d0c8; padding: 3px; cursor: pointer; background: #fff; transition: border-color .15s, transform .15s; }
+        .avatar-option:hover { transform: translateY(-2px); }
+        .avatar-option.selected { border-color: #c2652a; box-shadow: 0 0 0 3px #fbe8d8; }
+        .avatar-option img { width: 100%; height: 100%; border-radius: 9999px; display: block; }
+        /* Quiz options */
+        .quiz-option { border: 1px solid #d8d0c8; border-radius: .75rem; padding: 14px 18px; cursor: pointer; transition: border-color .15s, background .15s; display: flex; align-items: center; gap: 12px; font-family: 'Manrope', sans-serif; }
+        .quiz-option:hover { border-color: #c2652a; }
+        .quiz-option.selected { border-color: #c2652a; background: #fbe8d8; }
+        /* Callout astuce */
+        .callout { background: #fbe8d8; border-left: 3px solid #c2652a; border-radius: .5rem; padding: 16px 20px; display: flex; gap: 12px; }
+        /* Prose leçon */
+        .lesson-prose p { margin-bottom: 16px; line-height: 1.75; color: #4a4038; }
+        .lesson-prose h4 { font-family: 'EB Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-top: 28px; margin-bottom: 10px; color: #3a302a; }
+        .lesson-prose ul { margin: 0 0 16px 20px; display: grid; gap: 8px; }
+        .lesson-prose li { line-height: 1.6; color: #4a4038; }
+        .lesson-prose strong { color: #3a302a; }
         .skeleton { background: linear-gradient(90deg, #ece6dc 25%, #f6f0e8 37%, #ece6dc 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: .5rem; }
         @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+        input:focus { outline: none; border-color: #c2652a !important; box-shadow: 0 0 0 3px #fbe8d8; }
 </style>
 </head>
-<body class="font-body bg-background text-on-background">
+<body class="font-body bg-background">
+
 
 <!-- Mobile Top AppBar -->
-<header class="md:hidden flex justify-between items-center w-full px-6 py-4 bg-background/90 backdrop-blur-md border-b border-outline-variant/60 sticky top-0 z-40">
-  <a href="/dashboard.html" class="font-headline text-2xl font-bold text-primary tracking-tight">NetInit</a>
-  <div class="flex items-center gap-2">
-    <button type="button" onclick="openNotificationsDrawer()" class="relative p-2 rounded-xl text-on-surface-variant hover:text-primary transition-colors" title="Notifications">
-      <span class="material-symbols-outlined text-2xl">notifications</span>
-      <span id="notif-badge" class="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-primary border-2 border-background"></span>
-    </button>
-    <button type="button" onclick="openSettingsModal()" class="p-2 rounded-xl text-on-surface-variant hover:text-primary transition-colors" title="Paramètres">
-      <span class="material-symbols-outlined text-2xl">settings</span>
-    </button>
-  </div>
+<header class="md:hidden flex justify-between items-center w-full px-6 py-4 bg-background border-b border-outline-variant/60 sticky top-0 z-40">
+<a href="/dashboard.html" class="flex items-center gap-3">
+<img alt="Avatar" class="w-10 h-10 rounded-full border-2 border-primary-container bg-surface-container" id="mnav-avatar" src=""/>
+<span class="font-headline text-2xl font-bold text-primary">NetInit</span>
+</a>
+<button class="text-on-surface-variant hover:text-primary transition-colors" id="logout-btn-mobile" title="Déconnexion">
+<span class="material-symbols-outlined">logout</span>
+</button>
 </header>
-
 <!-- Desktop SideNav -->
 <nav class="hidden md:flex flex-col h-screen w-72 bg-surface border-r border-outline-variant/60 shadow-md fixed inset-y-0 left-0 z-50">
-<div class="p-6 border-b border-outline-variant/60 flex items-center justify-between">
-  <a href="/profile.html" class="flex items-center gap-4 mb-1">
-    <img alt="Avatar" class="w-11 h-11 rounded-full border-2 border-primary-container bg-surface-container object-cover" id="dnav-avatar" src=""/>
-    <div>
-      <h2 class="font-headline text-lg text-primary font-bold" id="dnav-name">—</h2>
-      <p class="text-xs text-on-surface-variant font-body" data-i18n="platform_tag">Plateforme NetInit</p>
-    </div>
-  </a>
-  <button type="button" onclick="openSettingsModal()" class="text-on-surface-variant hover:text-primary p-1.5 rounded-xl transition-colors" title="Paramètres">
-    <span class="material-symbols-outlined text-xl">settings</span>
-  </button>
+<div class="p-6 border-b border-outline-variant/60">
+<a href="/profile.html" class="flex items-center gap-4 mb-1">
+<img alt="Avatar" class="w-12 h-12 rounded-full border-2 border-primary-container bg-surface-container" id="dnav-avatar" src=""/>
+<div>
+<h2 class="font-headline text-xl text-primary font-bold" id="dnav-name">—</h2>
+<p class="text-sm text-on-surface-variant font-body">NetInit Platform</p>
 </div>
-
+</a>
+</div>
 <div class="flex-1 py-4 overflow-y-auto">
-  <a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html" id="nav-d-dashboard">
-    <span class="material-symbols-outlined">dashboard</span>
-    <span class="font-body" data-i18n="nav_dashboard">Tableau de bord</span>
-  </a>
-  <a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html#lecons" id="nav-d-lessons">
-    <span class="material-symbols-outlined">menu_book</span>
-    <span class="font-body" data-i18n="nav_lessons">Leçons</span>
-  </a>
-  <a class="flex items-center gap-3 bg-primary-container text-on-primary-container font-bold rounded-xl m-2 px-4 py-3 transition-all duration-200" href="/leaderboard.html" id="nav-d-rank">
-    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
-    <span class="font-body" data-i18n="nav_leaderboard">Classement</span>
-  </a>
-  <a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-xl m-2 px-4 py-3 transition-all duration-200" href="/profile.html" id="nav-d-profile">
-    <span class="material-symbols-outlined">person</span>
-    <span class="font-body" data-i18n="nav_profile">Profil</span>
-  </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html" id="nav-d-dashboard"><span class="material-symbols-outlined" style="">dashboard</span><span class="font-body">Tableau de bord</span></a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html#lecons" id="nav-d-lessons"><span class="material-symbols-outlined" style="">menu_book</span><span class="font-body">Leçons</span></a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container font-bold rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/leaderboard.html" id="nav-d-rank"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span><span class="font-body">Classement</span></a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/profile.html" id="nav-d-profile"><span class="material-symbols-outlined" style="">person</span><span class="font-body">Profil</span></a>
 </div>
-
-<div class="p-4 border-t border-outline-variant/60 flex items-center justify-between">
-  <button class="flex items-center gap-2 text-on-surface-variant hover:text-error transition-colors px-3 py-2 text-sm font-body" id="logout-btn-desktop">
-    <span class="material-symbols-outlined text-base">logout</span>
-    <span data-i18n="nav_logout">Déconnexion</span>
-  </button>
-  <button type="button" onclick="openNotificationsDrawer()" class="relative p-2 rounded-xl text-on-surface-variant hover:text-primary transition-colors" title="Notifications">
-    <span class="material-symbols-outlined text-xl">notifications</span>
-  </button>
+<div class="p-4 border-t border-outline-variant/60">
+<button class="flex items-center gap-3 text-on-surface-variant hover:text-error transition-colors w-full px-4 py-2" id="logout-btn-desktop">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body text-sm">Déconnexion</span>
+</button>
 </div>
 </nav>
-
 <!-- Mobile Bottom Navigation Bar -->
-<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 bg-surface-container-low shadow-[0_-2px_16px_rgba(58,48,42,0.08)] z-50 rounded-t-2xl pb-6 border-t border-outline-variant/50">
-<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1.5 transition-colors" href="/dashboard.html"><span class="material-symbols-outlined text-xl">dashboard</span><span class="font-label text-[10px] uppercase tracking-wider mt-0.5" data-i18n="nav_dashboard">Tableau</span></a>
-<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1.5 transition-colors" href="/dashboard.html#lecons"><span class="material-symbols-outlined text-xl">menu_book</span><span class="font-label text-[10px] uppercase tracking-wider mt-0.5" data-i18n="nav_lessons">Leçons</span></a>
-<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1.5 transition-transform" href="/leaderboard.html"><span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">leaderboard</span><span class="font-label text-[10px] uppercase tracking-wider mt-0.5" data-i18n="nav_leaderboard">Classement</span></a>
-<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1.5 transition-colors" href="/profile.html"><span class="material-symbols-outlined text-xl">person</span><span class="font-label text-[10px] uppercase tracking-wider mt-0.5" data-i18n="nav_profile">Profil</span></a>
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 bg-surface-container-low shadow-[0_-2px_16px_rgba(58,48,42,0.08)] z-50 rounded-t-xl pb-6">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/dashboard.html"><span class="material-symbols-outlined" style="">dashboard</span><span class="font-label text-xs uppercase tracking-wider mt-1">Tableau</span></a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/dashboard.html#lecons"><span class="material-symbols-outlined" style="">menu_book</span><span class="font-label text-xs uppercase tracking-wider mt-1">Leçons</span></a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 transition-transform" href="/leaderboard.html"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span><span class="font-label text-xs uppercase tracking-wider mt-1">Classement</span></a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/profile.html"><span class="material-symbols-outlined" style="">person</span><span class="font-label text-xs uppercase tracking-wider mt-1">Profil</span></a>
 </nav>
 
-<!-- Main Container -->
-<main class="flex-1 md:ml-72 flex flex-col min-h-screen pb-24 md:pb-0">
-<div class="p-6 md:p-12 max-w-4xl mx-auto w-full flex-1">
+<main class="flex-1 md:ml-72 flex flex-col min-h-screen pb-20 md:pb-0">
+<div class="p-6 md:p-12 max-w-3xl mx-auto w-full flex-1">
 
-  <div class="text-center mb-8">
-    <span class="text-primary font-label text-xs font-bold uppercase tracking-widest bg-primary-container/60 px-3 py-1 rounded-full border border-primary/20">Compétition Académique</span>
-    <h1 class="font-headline text-4xl md:text-5xl font-bold mt-2 mb-2 text-on-background">Classement des Apprenants</h1>
-    <p class="text-on-surface-variant font-body text-base max-w-lg mx-auto">Classement officiel NetInit établi sur le nombre de leçons complétées et le score cumulé aux 40 quiz.</p>
+  <div class="text-center mb-10">
+    <h1 class="font-headline text-4xl font-bold mb-3">Meilleurs Étudiants</h1>
+    <p class="text-on-surface-variant font-body">Classement institutionnel de la plateforme NetInit basé sur l'achèvement des modules et les scores globaux.</p>
   </div>
 
-  <!-- Top 3 Podium -->
-  <div id="podium-container" class="grid grid-cols-3 gap-3 md:gap-6 mb-10 items-end max-w-2xl mx-auto">
-    <div class="skeleton h-48 rounded-2xl"></div>
-    <div class="skeleton h-56 rounded-2xl"></div>
-    <div class="skeleton h-44 rounded-2xl"></div>
-  </div>
-
-  <!-- Recherche & Filtres -->
-  <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-    <div class="relative w-full sm:w-72">
-      <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-lg">search</span>
-      <input type="text" id="search-input" placeholder="Rechercher un apprenant..." oninput="filterLeaderboard()" class="w-full pl-9 pr-4 py-2 border border-outline-variant/60 rounded-xl text-xs font-body bg-surface-container-lowest focus:border-primary" />
-    </div>
-    <div class="text-xs text-on-surface-variant font-body" id="total-learners-count">
-      Chargement...
-    </div>
-  </div>
-
-  <!-- Tableau de Classement -->
-  <div class="bg-surface-container-lowest border border-outline-variant/60 rounded-2xl soft-shadow overflow-hidden mb-8">
-    <div class="grid grid-cols-[60px_1fr_auto] gap-3 px-6 py-3.5 bg-surface-container-low text-xs font-bold uppercase tracking-wider font-label text-on-surface-variant border-b border-outline-variant/40">
-      <span>Rang</span>
-      <span>Apprenant</span>
-      <span>Score Total</span>
+  <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl soft-shadow overflow-hidden">
+    <div class="grid grid-cols-[50px_1fr_auto] gap-3 px-5 py-3 bg-surface-container-low text-xs font-bold uppercase tracking-wider font-label text-on-surface-variant">
+      <span>Rang</span><span>Étudiant</span><span>Score</span>
     </div>
     <div id="leaderboard-list">
-      <div class="p-6 space-y-4">
-        <div class="skeleton h-12"></div>
-        <div class="skeleton h-12"></div>
-        <div class="skeleton h-12"></div>
-      </div>
+      <div class="p-5"><div class="skeleton h-14 mb-3"></div><div class="skeleton h-14 mb-3"></div><div class="skeleton h-14"></div></div>
     </div>
-  </div>
-
-  <!-- Carte Rang Personnel -->
-  <div id="my-rank-card" class="hidden bg-primary-container/40 border border-primary/30 rounded-2xl p-5 soft-shadow flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <span class="material-symbols-outlined text-primary text-2xl">stars</span>
-      <div>
-        <p class="font-bold text-sm text-on-background font-body" id="my-rank-text">Votre rang actuel</p>
-        <p class="text-xs text-on-surface-variant font-body">Continuez les quiz pour monter sur le podium !</p>
-      </div>
-    </div>
-    <a href="/dashboard.html#lecons" class="bg-primary text-on-primary font-bold text-xs px-4 py-2 rounded-xl font-body hover:bg-primary/90 transition-colors">Continuer les leçons</a>
   </div>
 
 </div>
@@ -210,96 +160,33 @@
 
 <script src="/js/common.js"></script>
 <script>
-  let allRows = [];
-  let currentUser = null;
-
   (async () => {
-    currentUser = await requireUser();
-    if (!currentUser) return;
-    mountAuthedChrome(currentUser);
+    const user = await requireUser();
+    if (!user) return;
+    mountAuthedChrome(user);
 
-    try {
-      allRows = await api("/api/leaderboard");
-      renderLeaderboard(allRows);
-    } catch (err) {
-      document.getElementById("leaderboard-list").innerHTML = `<p class="text-center text-error font-body py-10">Erreur d'affichage du classement.</p>`;
-    }
-  })();
-
-  function filterLeaderboard() {
-    const q = document.getElementById("search-input").value.toLowerCase().trim();
-    const filtered = allRows.filter((r) => r.nom.toLowerCase().includes(q));
-    renderLeaderboard(filtered);
-  }
-
-  function renderLeaderboard(rows) {
-    document.getElementById("total-learners-count").textContent = `${allRows.length} Apprenants enregistrés`;
+    const rows = await api("/api/leaderboard");
+    const rankColor = (i) => i === 0 ? "text-gold" : i === 1 ? "text-silver" : i === 2 ? "text-bronze" : "text-on-surface-variant";
 
     if (rows.length === 0) {
-      document.getElementById("podium-container").innerHTML = "";
-      document.getElementById("leaderboard-list").innerHTML = `<p class="text-center text-on-surface-variant font-body py-10">Aucun apprenant trouvé.</p>`;
+      document.getElementById("leaderboard-list").innerHTML = `<p class="text-center text-on-surface-variant font-body py-10">Personne n'a encore commencé — soyez le premier !</p>`;
       return;
     }
 
-    // Top 3 Podium
-    const top3 = allRows.slice(0, 3);
-    const podiumOrder = [top3[1], top3[0], top3[2]].filter(Boolean);
-    
-    document.getElementById("podium-container").innerHTML = podiumOrder.map((r) => {
-      const realRank = allRows.findIndex((x) => x.id === r.id) + 1;
-      const isFirst = realRank === 1;
-      const isSecond = realRank === 2;
-      const heightClass = isFirst ? "h-60 bg-gradient-to-t from-primary-container/60 to-surface-container-lowest border-primary" : isSecond ? "h-52 bg-surface-container-lowest border-outline-variant" : "h-44 bg-surface-container-lowest border-outline-variant";
-      const badgeIcon = isFirst ? "workspace_premium" : isSecond ? "military_tech" : "award_star";
-      const badgeColor = isFirst ? "text-gold" : isSecond ? "text-silver" : "text-bronze";
-
-      return `
-        <div class="flex flex-col items-center justify-end border rounded-2xl p-4 text-center soft-shadow relative ${heightClass}">
-          <div class="absolute -top-4 w-8 h-8 rounded-full bg-surface-container-lowest border border-outline-variant/60 shadow flex items-center justify-center ${badgeColor}">
-            <span class="material-symbols-outlined text-lg">${badgeIcon}</span>
-          </div>
-          <img src="${avatarUrl(r.avatar_seed || r.nom, 64)}" class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-surface-container border-2 border-primary/40 object-cover mb-2 soft-shadow" alt="" />
-          <p class="font-bold font-body text-xs md:text-sm text-on-background truncate max-w-full">${escapeHtml(r.nom)}</p>
-          <span class="text-[11px] font-bold text-primary font-body mt-0.5">${r.scoreTotal} pts</span>
-          <span class="text-[10px] text-on-surface-variant font-body">${r.leconsTerminees}/10 Leçons</span>
-        </div>
-      `;
-    }).join("");
-
-    // Liste des rangs
-    document.getElementById("leaderboard-list").innerHTML = rows.map((r, i) => {
-      const realRank = allRows.findIndex((x) => x.id === r.id) + 1;
-      const isMe = r.id === currentUser.id;
-      const rankColor = realRank === 1 ? "text-gold" : realRank === 2 ? "text-silver" : realRank === 3 ? "text-bronze" : "text-on-surface-variant";
-      const userPhoto = avatarUrl(r.avatar_seed || r.nom, 48);
-
-      return `
-        <div class="grid grid-cols-[60px_1fr_auto] gap-3 items-center px-6 py-4 border-t border-outline-variant/40 transition-colors ${isMe ? "bg-primary-container/30 border-l-4 border-l-primary" : "hover:bg-surface-container-low/40"}">
-          <span class="font-headline font-bold text-xl ${rankColor}">${realRank}</span>
-          <div class="flex items-center gap-3 min-w-0">
-            <img src="${userPhoto}" class="w-10 h-10 rounded-full bg-surface-container border border-outline-variant/60 shrink-0 object-cover" alt="" />
-            <div class="min-w-0">
-              <p class="font-bold font-body text-sm truncate text-on-background">${escapeHtml(r.nom)}${isMe ? ' <span class="text-xs font-normal text-primary font-label">(Vous)</span>' : ""}</p>
-              <p class="text-xs text-on-surface-variant font-body">${r.leconsTerminees} / 10 Leçons Validées</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="font-headline font-bold text-lg text-primary">${r.scoreTotal}</span>
-            <span class="text-xs font-body text-on-surface-variant"> pts</span>
+    document.getElementById("leaderboard-list").innerHTML = rows.map((r, i) => `
+      <div class="grid grid-cols-[50px_1fr_auto] gap-3 items-center px-5 py-4 border-t border-outline-variant/40 ${r.id === user.id ? "bg-primary-container/30" : ""}">
+        <span class="font-headline font-bold text-lg ${rankColor(i)}">${i + 1}</span>
+        <div class="flex items-center gap-3 min-w-0">
+          <img src="${avatarUrl(r.avatar_seed, 40)}" class="w-10 h-10 rounded-full bg-surface-container shrink-0" alt=""/>
+          <div class="min-w-0">
+            <p class="font-bold font-body truncate">${escapeHtml(r.nom)}${r.id === user.id ? " (vous)" : ""}</p>
+            <p class="text-xs text-on-surface-variant font-body">${r.leconsTerminees}/4 Leçons</p>
           </div>
         </div>
-      `;
-    }).join("");
-
-    // Affichage carte rang perso si présent
-    const myPos = allRows.findIndex((x) => x.id === currentUser.id);
-    const card = document.getElementById("my-rank-card");
-    if (myPos >= 0) {
-      document.getElementById("my-rank-text").textContent = `Vous êtes classé #${myPos + 1} avec ${allRows[myPos].scoreTotal} points !`;
-      card.classList.remove("hidden");
-    }
-  }
+        <span class="font-headline font-bold text-primary whitespace-nowrap">${r.scoreTotal} <span class="text-xs font-body text-on-surface-variant font-normal">pts</span></span>
+      </div>
+    `).join("");
+  })();
 </script>
 
-</body>
-</html>
+</body></html>

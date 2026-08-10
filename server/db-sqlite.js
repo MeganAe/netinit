@@ -50,32 +50,34 @@ db.exec(`
 `);
 
 // Migration douce pour une base déjà créée avant l'ajout de ces colonnes.
-["ALTER TABLE utilisateurs ADD COLUMN avatar_seed TEXT NOT NULL DEFAULT ''", "ALTER TABLE utilisateurs ADD COLUMN bio TEXT NOT NULL DEFAULT ''", "ALTER TABLE lecons ADD COLUMN astuce TEXT NOT NULL DEFAULT ''"]
+["ALTER TABLE utilisateurs ADD COLUMN avatar_seed TEXT NOT NULL DEFAULT ''", "ALTER TABLE lecons ADD COLUMN astuce TEXT NOT NULL DEFAULT ''"]
   .forEach((stmt) => { try { db.exec(stmt); } catch (_) { /* colonne déjà existante */ } });
 
 (function seed() {
-  const insertLecon = db.prepare("INSERT INTO lecons (titre, resume, icone, contenu, astuce, ordre) VALUES (?, ?, ?, ?, ?, ?)");
-  const updateLecon = db.prepare("UPDATE lecons SET titre=?, resume=?, icone=?, contenu=?, astuce=? WHERE ordre=?");
-  const deleteQuiz = db.prepare("DELETE FROM quiz WHERE lecon_id=?");
-  const insertQuiz = db.prepare("INSERT INTO quiz (lecon_id, question, options, reponse_correcte) VALUES (?, ?, ?, ?)");
-  const getLeconByOrdre = db.prepare("SELECT id FROM lecons WHERE ordre=?");
-
-  LECONS.forEach((l, i) => {
-    let row = getLeconByOrdre.get(l.ordre);
-    let leconId;
-    if (!row) {
+  const count = db.prepare("SELECT COUNT(*) AS n FROM lecons").get().n;
+  if (count === 0) {
+    const insertLecon = db.prepare("INSERT INTO lecons (titre, resume, icone, contenu, astuce, ordre) VALUES (?, ?, ?, ?, ?, ?)");
+    const insertQuiz = db.prepare("INSERT INTO quiz (lecon_id, question, options, reponse_correcte) VALUES (?, ?, ?, ?)");
+    LECONS.forEach((l, i) => {
       const res = insertLecon.run(l.titre, l.resume, l.icone, l.contenu, l.astuce || "", l.ordre);
-      leconId = Number(res.lastInsertRowid);
-    } else {
-      leconId = row.id;
-      updateLecon.run(l.titre, l.resume, l.icone, l.contenu, l.astuce || "", l.ordre);
-    }
-    deleteQuiz.run(leconId);
-    if (QUIZ[i]) {
+      const leconId = Number(res.lastInsertRowid);
       QUIZ[i].forEach((q) => insertQuiz.run(leconId, q.q, JSON.stringify(q.options), q.r));
-    }
-  });
-  console.log(`[sqlite] Base synchronisée : ${LECONS.length} leçons, ${QUIZ.flat().length} questions.`);
+    });
+    console.log(`[sqlite] Base initialisée : ${LECONS.length} leçons, ${QUIZ.flat().length} questions.`);
+  } else {
+    // Synchronise le contenu avec content.js (utile en dev si le fichier change).
+    const updateLecon = db.prepare("UPDATE lecons SET titre=?, resume=?, icone=?, contenu=?, astuce=? WHERE ordre=?");
+    const deleteQuiz = db.prepare("DELETE FROM quiz WHERE lecon_id=?");
+    const insertQuiz = db.prepare("INSERT INTO quiz (lecon_id, question, options, reponse_correcte) VALUES (?, ?, ?, ?)");
+    const getIdByOrdre = db.prepare("SELECT id FROM lecons WHERE ordre=?");
+    LECONS.forEach((l, i) => {
+      updateLecon.run(l.titre, l.resume, l.icone, l.contenu, l.astuce || "", l.ordre);
+      const row = getIdByOrdre.get(l.ordre);
+      if (!row) return;
+      deleteQuiz.run(row.id);
+      QUIZ[i].forEach((q) => insertQuiz.run(row.id, q.q, JSON.stringify(q.options), q.r));
+    });
+  }
 })();
 
 // Toutes les fonctions renvoient une Promise pour respecter la même
@@ -87,26 +89,17 @@ module.exports = {
     db.prepare("SELECT * FROM utilisateurs WHERE email = ?").get(email)
   ),
   getUserById: wrap((id) =>
-    db.prepare("SELECT id, nom, email, avatar_seed, bio, date_inscription FROM utilisateurs WHERE id = ?").get(id)
+    db.prepare("SELECT id, nom, email, avatar_seed, date_inscription FROM utilisateurs WHERE id = ?").get(id)
   ),
   createUser: wrap((nom, email, hash, avatarSeed) => {
     const res = db
       .prepare("INSERT INTO utilisateurs (nom, email, mot_de_passe, avatar_seed) VALUES (?, ?, ?, ?)")
       .run(nom, email, hash, avatarSeed || email);
-    return { id: Number(res.lastInsertRowid), nom, email, avatar_seed: avatarSeed || email, bio: "" };
+    return { id: Number(res.lastInsertRowid), nom, email, avatar_seed: avatarSeed || email };
   }),
   updateAvatar: wrap((userId, avatarSeed) => {
     db.prepare("UPDATE utilisateurs SET avatar_seed = ? WHERE id = ?").run(avatarSeed, userId);
     return true;
-  }),
-  updateProfile: wrap((userId, { nom, bio, avatarSeed }) => {
-    const current = db.prepare("SELECT * FROM utilisateurs WHERE id = ?").get(userId);
-    if (!current) return false;
-    const newNom = nom ? nom.trim() : current.nom;
-    const newBio = typeof bio === "string" ? bio.trim() : (current.bio || "");
-    const newAvatar = avatarSeed ? avatarSeed : current.avatar_seed;
-    db.prepare("UPDATE utilisateurs SET nom = ?, bio = ?, avatar_seed = ? WHERE id = ?").run(newNom, newBio, newAvatar, userId);
-    return { id: userId, nom: newNom, bio: newBio, avatar_seed: newAvatar, email: current.email };
   }),
 
   getLecons: wrap(() => db.prepare("SELECT id, titre, resume, icone, ordre FROM lecons ORDER BY ordre").all()),
