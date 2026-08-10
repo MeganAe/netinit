@@ -2,7 +2,7 @@
 <html lang="fr"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Tableau de bord — NetInit</title>
+<title>Classement — NetInit</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -118,9 +118,9 @@
 </a>
 </div>
 <div class="flex-1 py-4 overflow-y-auto">
-<a class="flex items-center gap-3 bg-primary-container text-on-primary-container font-bold rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html" id="nav-d-dashboard"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span><span class="font-body">Tableau de bord</span></a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html" id="nav-d-dashboard"><span class="material-symbols-outlined" style="">dashboard</span><span class="font-body">Tableau de bord</span></a>
 <a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html#lecons" id="nav-d-lessons"><span class="material-symbols-outlined" style="">menu_book</span><span class="font-body">Leçons</span></a>
-<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/leaderboard.html" id="nav-d-rank"><span class="material-symbols-outlined" style="">leaderboard</span><span class="font-body">Classement</span></a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container font-bold rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/leaderboard.html" id="nav-d-rank"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span><span class="font-body">Classement</span></a>
 <a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/profile.html" id="nav-d-profile"><span class="material-symbols-outlined" style="">person</span><span class="font-body">Profil</span></a>
 </div>
 <div class="p-4 border-t border-outline-variant/60">
@@ -132,33 +132,27 @@
 </nav>
 <!-- Mobile Bottom Navigation Bar -->
 <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 bg-surface-container-low shadow-[0_-2px_16px_rgba(58,48,42,0.08)] z-50 rounded-t-xl pb-6">
-<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 transition-transform" href="/dashboard.html"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span><span class="font-label text-xs uppercase tracking-wider mt-1">Tableau</span></a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/dashboard.html"><span class="material-symbols-outlined" style="">dashboard</span><span class="font-label text-xs uppercase tracking-wider mt-1">Tableau</span></a>
 <a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/dashboard.html#lecons"><span class="material-symbols-outlined" style="">menu_book</span><span class="font-label text-xs uppercase tracking-wider mt-1">Leçons</span></a>
-<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/leaderboard.html"><span class="material-symbols-outlined" style="">leaderboard</span><span class="font-label text-xs uppercase tracking-wider mt-1">Classement</span></a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 transition-transform" href="/leaderboard.html"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span><span class="font-label text-xs uppercase tracking-wider mt-1">Classement</span></a>
 <a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/profile.html"><span class="material-symbols-outlined" style="">person</span><span class="font-label text-xs uppercase tracking-wider mt-1">Profil</span></a>
 </nav>
 
 <main class="flex-1 md:ml-72 flex flex-col min-h-screen pb-20 md:pb-0">
-<div class="p-6 md:p-12 max-w-6xl mx-auto w-full flex-1">
+<div class="p-6 md:p-12 max-w-3xl mx-auto w-full flex-1">
 
-  <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-    <div>
-      <h1 class="font-headline text-4xl md:text-5xl font-bold mb-2" id="dash-title">Bonjour</h1>
-      <p class="text-on-surface-variant text-lg font-body" id="dash-sub">Votre parcours d'initiation numérique.</p>
-    </div>
-    <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/40 soft-shadow flex flex-col gap-2 min-w-[220px]">
-      <div class="flex justify-between items-center">
-        <span class="text-xs font-bold uppercase tracking-wider font-label text-on-surface-variant">Progression globale</span>
-        <span class="font-headline font-bold text-primary" id="dash-pct">0%</span>
-      </div>
-      <div class="signal-bars" id="dash-bars"></div>
-      <span class="text-xs text-on-surface-variant font-body" id="dash-count">0 / 4 leçons</span>
-    </div>
+  <div class="text-center mb-10">
+    <h1 class="font-headline text-4xl font-bold mb-3">Meilleurs Étudiants</h1>
+    <p class="text-on-surface-variant font-body">Classement institutionnel de la plateforme NetInit basé sur l'achèvement des modules et les scores globaux.</p>
   </div>
 
-  <div class="grid sm:grid-cols-2 gap-5" id="lesson-grid">
-    <div class="skeleton h-40"></div><div class="skeleton h-40"></div>
-    <div class="skeleton h-40"></div><div class="skeleton h-40"></div>
+  <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl soft-shadow overflow-hidden">
+    <div class="grid grid-cols-[50px_1fr_auto] gap-3 px-5 py-3 bg-surface-container-low text-xs font-bold uppercase tracking-wider font-label text-on-surface-variant">
+      <span>Rang</span><span>Étudiant</span><span>Score</span>
+    </div>
+    <div id="leaderboard-list">
+      <div class="p-5"><div class="skeleton h-14 mb-3"></div><div class="skeleton h-14 mb-3"></div><div class="skeleton h-14"></div></div>
+    </div>
   </div>
 
 </div>
@@ -171,37 +165,26 @@
     if (!user) return;
     mountAuthedChrome(user);
 
-    document.getElementById("dash-title").textContent = `Bonjour, ${user.nom.split(" ")[0]}`;
+    const rows = await api("/api/leaderboard");
+    const rankColor = (i) => i === 0 ? "text-gold" : i === 1 ? "text-silver" : i === 2 ? "text-bronze" : "text-on-surface-variant";
 
-    const lessons = await api("/api/lessons");
-    const done = lessons.filter((l) => l.terminee).length;
-    const pct = Math.round((done / lessons.length) * 100);
+    if (rows.length === 0) {
+      document.getElementById("leaderboard-list").innerHTML = `<p class="text-center text-on-surface-variant font-body py-10">Personne n'a encore commencé — soyez le premier !</p>`;
+      return;
+    }
 
-    document.getElementById("dash-pct").textContent = pct + "%";
-    document.getElementById("dash-bars").innerHTML = signalBarsHtml(done, lessons.length);
-    document.getElementById("dash-count").textContent = `${done} / ${lessons.length} leçons`;
-    document.getElementById("dash-sub").textContent =
-      done === 0 ? "Votre parcours d'initiation numérique commence ici."
-      : done === lessons.length ? "Parcours complet, félicitations !"
-      : "Votre parcours d'initiation numérique.";
-
-    const iconMap = { compass: "explore", search: "search", mail: "mail", shield: "shield_lock" };
-    const statusBadge = (l) => l.terminee
-      ? `<span class="text-xs font-bold font-label bg-success-container text-success px-3 py-1 rounded-full flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-success"></span> Terminée</span>`
-      : `<span class="text-xs font-bold font-label bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full">À faire</span>`;
-
-    document.getElementById("lesson-grid").innerHTML = lessons.map((l) => `
-      <a href="/lesson.html?id=${l.id}" class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 soft-shadow hover:border-primary/40 transition-colors flex flex-col">
-        <div class="flex items-start justify-between mb-4">
-          <div class="w-11 h-11 rounded-lg ${l.terminee ? "bg-primary text-on-primary" : "bg-primary-container text-on-primary-container"} flex items-center justify-center">
-            <span class="material-symbols-outlined text-xl">${iconMap[l.icone] || "menu_book"}</span>
+    document.getElementById("leaderboard-list").innerHTML = rows.map((r, i) => `
+      <div class="grid grid-cols-[50px_1fr_auto] gap-3 items-center px-5 py-4 border-t border-outline-variant/40 ${r.id === user.id ? "bg-primary-container/30" : ""}">
+        <span class="font-headline font-bold text-lg ${rankColor(i)}">${i + 1}</span>
+        <div class="flex items-center gap-3 min-w-0">
+          <img src="${avatarUrl(r.avatar_seed, 40)}" class="w-10 h-10 rounded-full bg-surface-container shrink-0" alt=""/>
+          <div class="min-w-0">
+            <p class="font-bold font-body truncate">${escapeHtml(r.nom)}${r.id === user.id ? " (vous)" : ""}</p>
+            <p class="text-xs text-on-surface-variant font-body">${r.leconsTerminees}/4 Leçons</p>
           </div>
-          ${statusBadge(l)}
         </div>
-        <h3 class="font-headline text-xl font-bold mb-1">${l.titre}</h3>
-        <p class="text-sm text-on-surface-variant font-body flex-1">${l.resume}</p>
-        ${l.terminee ? `<p class="text-xs font-bold text-primary font-label mt-3">Score : ${l.score}/${l.total}</p>` : ""}
-      </a>
+        <span class="font-headline font-bold text-primary whitespace-nowrap">${r.scoreTotal} <span class="text-xs font-body text-on-surface-variant font-normal">pts</span></span>
+      </div>
     `).join("");
   })();
 </script>

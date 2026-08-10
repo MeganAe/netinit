@@ -26,14 +26,17 @@ function init() {
           nom TEXT NOT NULL,
           email TEXT NOT NULL UNIQUE,
           mot_de_passe TEXT NOT NULL,
+          avatar_seed TEXT NOT NULL DEFAULT '',
           date_inscription TIMESTAMP NOT NULL DEFAULT now()
         );`;
+      await sql`ALTER TABLE utilisateurs ADD COLUMN IF NOT EXISTS avatar_seed TEXT NOT NULL DEFAULT '';`;
       await sql`
         CREATE TABLE IF NOT EXISTS lecons (
           id SERIAL PRIMARY KEY,
           titre TEXT NOT NULL, resume TEXT NOT NULL, icone TEXT NOT NULL,
-          contenu TEXT NOT NULL, ordre INTEGER NOT NULL
+          contenu TEXT NOT NULL, astuce TEXT NOT NULL DEFAULT '', ordre INTEGER NOT NULL
         );`;
+      await sql`ALTER TABLE lecons ADD COLUMN IF NOT EXISTS astuce TEXT NOT NULL DEFAULT '';`;
       await sql`
         CREATE TABLE IF NOT EXISTS quiz (
           id SERIAL PRIMARY KEY,
@@ -57,8 +60,8 @@ function init() {
         for (let i = 0; i < LECONS.length; i++) {
           const l = LECONS[i];
           const { rows: inserted } = await sql`
-            INSERT INTO lecons (titre, resume, icone, contenu, ordre)
-            VALUES (${l.titre}, ${l.resume}, ${l.icone}, ${l.contenu}, ${l.ordre})
+            INSERT INTO lecons (titre, resume, icone, contenu, astuce, ordre)
+            VALUES (${l.titre}, ${l.resume}, ${l.icone}, ${l.contenu}, ${l.astuce || ""}, ${l.ordre})
             RETURNING id`;
           const leconId = inserted[0].id;
           for (const q of QUIZ[i]) {
@@ -68,6 +71,26 @@ function init() {
           }
         }
         console.log(`[postgres] Base initialisée : ${LECONS.length} leçons.`);
+      } else {
+        // Synchronise le contenu (texte des leçons + quiz) avec content.js à
+        // chaque démarrage, pour que les mises à jour du contenu pédagogique
+        // se propagent sans perdre les comptes ni la progression des étudiants.
+        for (let i = 0; i < LECONS.length; i++) {
+          const l = LECONS[i];
+          const { rows: existing } = await sql`SELECT id FROM lecons WHERE ordre = ${l.ordre}`;
+          if (existing.length === 0) continue;
+          const leconId = existing[0].id;
+          await sql`
+            UPDATE lecons SET titre = ${l.titre}, resume = ${l.resume}, icone = ${l.icone},
+                               contenu = ${l.contenu}, astuce = ${l.astuce || ""}
+            WHERE id = ${leconId}`;
+          await sql`DELETE FROM quiz WHERE lecon_id = ${leconId}`;
+          for (const q of QUIZ[i]) {
+            await sql`
+              INSERT INTO quiz (lecon_id, question, options, reponse_correcte)
+              VALUES (${leconId}, ${q.q}, ${JSON.stringify(q.options)}, ${q.r})`;
+          }
+        }
       }
     })();
   }
@@ -82,16 +105,21 @@ module.exports = {
   },
   getUserById: async (id) => {
     await init();
-    const { rows } = await sql`SELECT id, nom, email FROM utilisateurs WHERE id = ${id}`;
+    const { rows } = await sql`SELECT id, nom, email, avatar_seed, date_inscription FROM utilisateurs WHERE id = ${id}`;
     return rows[0] || null;
   },
-  createUser: async (nom, email, hash) => {
+  createUser: async (nom, email, hash, avatarSeed) => {
     await init();
     const { rows } = await sql`
-      INSERT INTO utilisateurs (nom, email, mot_de_passe)
-      VALUES (${nom}, ${email}, ${hash})
-      RETURNING id, nom, email`;
+      INSERT INTO utilisateurs (nom, email, mot_de_passe, avatar_seed)
+      VALUES (${nom}, ${email}, ${hash}, ${avatarSeed || email})
+      RETURNING id, nom, email, avatar_seed`;
     return rows[0];
+  },
+  updateAvatar: async (userId, avatarSeed) => {
+    await init();
+    await sql`UPDATE utilisateurs SET avatar_seed = ${avatarSeed} WHERE id = ${userId}`;
+    return true;
   },
 
   getLecons: async () => {
@@ -131,5 +159,19 @@ module.exports = {
       ON CONFLICT (utilisateur_id, lecon_id)
       DO UPDATE SET terminee = true, score = ${score}, total = ${total}, date_completion = now()`;
     return true;
+  },
+
+  getLeaderboard: async () => {
+    await init();
+    const { rows } = await sql`
+      SELECT u.id, u.nom, u.avatar_seed,
+             COUNT(p.id)::int AS lecons_terminees,
+             COALESCE(SUM(p.score), 0)::int AS score_total
+      FROM utilisateurs u
+      LEFT JOIN progression p ON p.utilisateur_id = u.id AND p.terminee = true
+      GROUP BY u.id
+      ORDER BY lecons_terminees DESC, score_total DESC
+      LIMIT 20`;
+    return rows;
   },
 };

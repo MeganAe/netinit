@@ -11,7 +11,7 @@ app.use(cookieParser());
 // ─── Authentification ───
 
 app.post("/api/register", async (req, res) => {
-  const { nom, email, mot_de_passe } = req.body || {};
+  const { nom, email, mot_de_passe, avatarSeed } = req.body || {};
   if (!nom || !email || !mot_de_passe) {
     return res.status(400).json({ error: "Tous les champs sont obligatoires." });
   }
@@ -25,7 +25,7 @@ app.post("/api/register", async (req, res) => {
     if (existe) return res.status(409).json({ error: "Un compte existe déjà avec cet email." });
 
     const hash = bcrypt.hashSync(mot_de_passe, 10);
-    const user = await db.createUser(nom.trim(), emailNorm, hash);
+    const user = await db.createUser(nom.trim(), emailNorm, hash, avatarSeed);
     setAuthCookie(res, user.id);
     res.status(201).json(user);
   } catch (err) {
@@ -62,6 +62,15 @@ app.get("/api/me", requireAuth, async (req, res) => {
   const user = await db.getUserById(req.userId);
   if (!user) return res.status(401).json({ error: "Session invalide." });
   res.json(user);
+});
+
+app.patch("/api/me/avatar", requireAuth, async (req, res) => {
+  const { avatarSeed } = req.body || {};
+  if (!avatarSeed || typeof avatarSeed !== "string") {
+    return res.status(400).json({ error: "Avatar invalide." });
+  }
+  await db.updateAvatar(req.userId, avatarSeed.slice(0, 64));
+  res.json({ ok: true });
 });
 
 // ─── Leçons ───
@@ -141,6 +150,21 @@ app.get("/api/progress", requireAuth, async (req, res) => {
     leconsTotal: lecons.length,
     details,
   });
+});
+
+// ─── Classement ───
+
+app.get("/api/leaderboard", requireAuth, async (req, res) => {
+  const rows = await db.getLeaderboard();
+  res.json(
+    rows.map((r) => ({
+      id: r.id,
+      nom: r.nom,
+      avatar_seed: r.avatar_seed,
+      leconsTerminees: Number(r.lecons_terminees),
+      scoreTotal: Number(r.score_total),
+    }))
+  );
 });
 
 module.exports = app;
