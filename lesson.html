@@ -156,7 +156,7 @@
 <div class="p-6 md:p-12 max-w-4xl mx-auto w-full flex-1">
 
   <div class="flex items-center gap-2 text-xs font-body text-on-surface-variant mb-6" id="crumb">
-    <span class="material-symbols-outlined text-sm">lock</span> netinit.vercel.app / lecon
+    netinit.vercel.app / lecon
   </div>
 
   <article id="lesson-article">
@@ -178,7 +178,7 @@
     5: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1200&q=80&auto=format&fit=crop",
     6: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=80&auto=format&fit=crop",
     7: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1200&q=80&auto=format&fit=crop",
-    8: "https://images.unsplash.com/photo-1677442136019-21780efad99a?w=1200&q=80&auto=format&fit=crop",
+    8: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&q=80&auto=format&fit=crop",
     9: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&q=80&auto=format&fit=crop",
     10: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=80&auto=format&fit=crop",
   };
@@ -199,15 +199,14 @@
     }
 
     const slug = lesson.titre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(" ").slice(0, 2).join("-");
-    document.getElementById("crumb").innerHTML = `
-      <span class="material-symbols-outlined text-sm">lock</span> netinit.vercel.app / lecon / ${slug}`;
+    document.getElementById("crumb").innerHTML = `netinit.vercel.app / lecon / ${slug}`;
 
     const prevId = Number(id) > 1 ? Number(id) - 1 : null;
     const nextId = Number(id) < 10 ? Number(id) + 1 : null;
 
     document.getElementById("lesson-article").innerHTML = `
       <div class="flex items-center gap-2 mb-3 text-xs font-bold uppercase tracking-wider font-label text-primary">
-        <span class="material-symbols-outlined text-base">${lesson.icone || "menu_book"}</span> Module ${lesson.ordre} sur 10
+        Module ${lesson.ordre} sur 10
       </div>
       <h1 class="font-headline text-3xl md:text-5xl font-bold mb-4 leading-tight text-on-background">${escapeHtml(lesson.titre)}</h1>
       <p class="text-on-surface-variant font-body text-lg mb-8 leading-relaxed">${escapeHtml(lesson.resume)}</p>
@@ -220,7 +219,6 @@
 
       ${lesson.astuce ? `
         <div class="callout mb-10 soft-shadow">
-          <span class="material-symbols-outlined text-primary text-2xl shrink-0">lightbulb</span>
           <div>
             <p class="font-bold font-headline text-primary mb-1 text-base">Astuce Pratique NetInit</p>
             <p class="text-sm font-body text-on-surface-variant leading-relaxed">${escapeHtml(lesson.astuce)}</p>

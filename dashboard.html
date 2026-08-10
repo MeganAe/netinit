@@ -177,7 +177,7 @@
       <div class="signal-bars" id="dash-bars"></div>
       <div class="flex items-center justify-between text-xs text-on-surface-variant font-body">
         <span id="dash-count">0 / 10 leçons</span>
-        <span class="font-bold text-primary flex items-center gap-1"><span class="material-symbols-outlined text-sm">local_fire_department</span> Streak 1j</span>
+        <span class="font-bold text-primary text-xs">Streak 1j</span>
       </div>
     </div>
   </div>
@@ -185,9 +185,7 @@
   <!-- Grille des 10 Leçons -->
   <div id="lecons" class="mb-6">
     <div class="flex items-center justify-between mb-6">
-      <h2 class="font-headline text-2xl font-bold text-on-background flex items-center gap-2">
-        <span class="material-symbols-outlined text-primary">auto_stories</span> Vos 10 Modules de Formation
-      </h2>
+      <h2 class="font-headline text-2xl font-bold text-on-background">Vos 10 Modules de Formation</h2>
       <span class="text-xs font-label uppercase tracking-wider text-on-surface-variant bg-surface-container px-3 py-1 rounded-full">40 Quiz au Total</span>
     </div>
 
@@ -230,8 +228,8 @@
       <a href="/lesson.html?id=${l.id}" class="bg-surface-container-lowest border border-outline-variant/60 rounded-2xl p-6 soft-shadow hover:border-primary/60 transition-all flex flex-col justify-between group">
         <div>
           <div class="flex items-start justify-between mb-4">
-            <div class="w-12 h-12 rounded-xl ${l.terminee ? "bg-primary text-on-primary" : "bg-primary-container text-on-primary-container"} flex items-center justify-center group-hover:scale-105 transition-transform">
-              <span class="material-symbols-outlined text-2xl">${l.icone || "menu_book"}</span>
+            <div class="w-12 h-12 rounded-xl ${l.terminee ? "bg-primary text-on-primary" : "bg-primary-container text-on-primary-container"} flex items-center justify-center group-hover:scale-105 transition-transform text-on-primary-container font-headline font-bold text-sm">
+              ${l.ordre}
             </div>
             ${statusBadge(l)}
           </div>

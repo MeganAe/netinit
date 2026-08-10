@@ -12,7 +12,7 @@ async function api(path, options = {}) {
   return data;
 }
 
-// ─── Directives Avatars & Images ───
+// ─── Avatars & Images ───
 function avatarUrl(seed, size = 64) {
   if (!seed) seed = "netinit";
   if (typeof seed === "string" && (seed.startsWith("http://") || seed.startsWith("https://") || seed.startsWith("data:image/"))) {
@@ -25,14 +25,14 @@ function escapeHtml(str) {
   return String(str || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-// ─── Render Prose & Inline Diagrams ───
+// ─── Render Prose (Texte des leçons) ───
 function renderProse(text) {
   if (!text) return "";
   const blocks = text.trim().split(/\n\s*\n/);
   return blocks.map((block) => {
     const trimmed = block.trim();
     if (trimmed.startsWith("<div") && trimmed.endsWith("</div>")) {
-      return trimmed; // Rendu direct des blocs HTML/SVG prédéfinis
+      return trimmed;
     }
     const lines = trimmed.split("\n").map((l) => l.trim()).filter(Boolean);
     if (lines.length === 1 && lines[0].startsWith("## ")) {
@@ -51,7 +51,7 @@ function signalBarsHtml(activeCount, total = 10) {
   return html;
 }
 
-// ─── Dictionnaire de Traduction i18n ───
+// ─── Dictionnaire i18n ───
 const TRANSLATIONS = {
   fr: {
     nav_dashboard: "Tableau de bord",
@@ -59,23 +59,22 @@ const TRANSLATIONS = {
     nav_leaderboard: "Classement",
     nav_profile: "Profil",
     nav_logout: "Déconnexion",
-    platform_tag: "Plateforme NetInit",
+    platform_tag: "NetInit",
     header_settings: "Paramètres",
     header_notifications: "Notifications",
     settings_title: "Paramètres d'affichage",
     settings_darkmode: "Mode sombre",
-    settings_darkmode_desc: "Basculer vers un thème sombre confortable pour les yeux.",
+    settings_darkmode_desc: "Basculer vers un thème sombre confortable.",
     settings_lang: "Langue de la plateforme",
     settings_lang_desc: "Choisissez votre langue d'affichage.",
-    settings_accent: "Couleur d'accentuation",
     settings_close: "Fermer",
-    notif_title: "Centre de notifications",
-    notif_empty: "Aucune nouvelle notification pour le moment.",
+    notif_title: "Notifications",
+    notif_empty: "Aucune nouvelle notification.",
     notif_mark_read: "Tout marquer comme lu",
-    notif_1_title: "NetInit v2.0 disponible",
-    notif_1_desc: "10 leçons fondamentales sont désormais accessibles avec des schémas interactifs.",
-    notif_2_title: "Nouveau classement hebdomadaire",
-    notif_2_desc: "Consultez la page classement pour voir votre position sur le podium !",
+    notif_1_title: "Mise à jour NetInit",
+    notif_1_desc: "10 leçons fondamentales sont désormais disponibles.",
+    notif_2_title: "Classement mis à jour",
+    notif_2_desc: "Consultez la page classement pour voir votre position !",
     logout_confirm: "Êtes-vous sûr de vouloir vous déconnecter ?",
   },
   en: {
@@ -84,23 +83,22 @@ const TRANSLATIONS = {
     nav_leaderboard: "Leaderboard",
     nav_profile: "Profile",
     nav_logout: "Log out",
-    platform_tag: "NetInit Platform",
+    platform_tag: "NetInit",
     header_settings: "Settings",
     header_notifications: "Notifications",
     settings_title: "Display Settings",
     settings_darkmode: "Dark Mode",
-    settings_darkmode_desc: "Switch to a dark theme comfortable for night reading.",
+    settings_darkmode_desc: "Switch to a dark comfortable theme.",
     settings_lang: "Platform Language",
     settings_lang_desc: "Choose your preferred display language.",
-    settings_accent: "Accent Color",
     settings_close: "Close",
-    notif_title: "Notification Center",
-    notif_empty: "No new notifications right now.",
+    notif_title: "Notifications",
+    notif_empty: "No new notifications.",
     notif_mark_read: "Mark all as read",
-    notif_1_title: "NetInit v2.0 Released",
-    notif_1_desc: "10 fundamental lessons are now available with visual diagrams.",
-    notif_2_title: "New Weekly Ranking",
-    notif_2_desc: "Check out the leaderboard page to see your rank on the podium!",
+    notif_1_title: "NetInit Update",
+    notif_1_desc: "10 fundamental lessons are now available.",
+    notif_2_title: "Leaderboard Updated",
+    notif_2_desc: "Check out the leaderboard page to see your position!",
     logout_confirm: "Are you sure you want to log out?",
   },
 };
@@ -131,8 +129,46 @@ function applyTranslations() {
   });
 }
 
-// ─── Mode Sombre & Thème ───
+// ─── Injection des Styles de Mode Sombre Globaux ───
+function injectDarkStyles() {
+  if (document.getElementById("netinit-dark-styles")) return;
+  const style = document.createElement("style");
+  style.id = "netinit-dark-styles";
+  style.textContent = `
+    html.dark, html.dark body {
+      background-color: #161210 !important;
+      color: #ece6dc !important;
+    }
+    html.dark header, html.dark nav {
+      background-color: #211c19 !important;
+      color: #ece6dc !important;
+      border-color: rgba(184, 174, 166, 0.2) !important;
+    }
+    html.dark .bg-background {
+      background-color: #161210 !important;
+    }
+    html.dark .bg-surface, html.dark .bg-surface-container-low {
+      background-color: #211c19 !important;
+    }
+    html.dark .bg-surface-container-lowest, html.dark .bg-surface-container {
+      background-color: #2a2420 !important;
+      color: #ece6dc !important;
+    }
+    html.dark .text-on-background {
+      color: #f5efe6 !important;
+    }
+    html.dark .text-on-surface-variant {
+      color: #b8aea6 !important;
+    }
+    html.dark .border-outline-variant\\/60, html.dark .border-outline-variant\\/50, html.dark .border-outline-variant\\/40 {
+      border-color: rgba(184, 174, 166, 0.2) !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 function initTheme() {
+  injectDarkStyles();
   const storedTheme = localStorage.getItem("netinit_theme");
   const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
   if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
@@ -145,21 +181,18 @@ function initTheme() {
 function toggleTheme() {
   const isDark = document.documentElement.classList.toggle("dark");
   localStorage.setItem("netinit_theme", isDark ? "dark" : "light");
-  const icon = document.getElementById("dark-mode-icon");
-  if (icon) icon.textContent = isDark ? "light_mode" : "dark_mode";
 }
 
-// Initialise le thème immédiatement au chargement du script
 initTheme();
 
-// ─── Modale Paramètres & Tiroir Notifications ───
+// ─── Modale Paramètres & Notifications ───
 function injectModals() {
   if (document.getElementById("settings-modal")) return;
 
   const modalHtml = `
     <!-- Modale Paramètres -->
-    <div id="settings-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
-      <div class="bg-surface-container-lowest border border-outline-variant/60 rounded-2xl max-w-md w-full p-6 soft-shadow relative animate-fade-in">
+    <div id="settings-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+      <div class="bg-surface-container-lowest border border-outline-variant/60 rounded-2xl max-w-md w-full p-6 soft-shadow relative">
         <div class="flex items-center justify-between pb-4 border-b border-outline-variant/50">
           <div class="flex items-center gap-2 text-primary font-headline text-xl font-bold">
             <span class="material-symbols-outlined">settings</span>
@@ -171,7 +204,6 @@ function injectModals() {
         </div>
 
         <div class="py-6 space-y-6">
-          <!-- Toggle Mode Sombre -->
           <div class="flex items-center justify-between gap-4">
             <div>
               <p class="font-bold font-body text-sm text-on-background flex items-center gap-2">
@@ -185,7 +217,6 @@ function injectModals() {
             </button>
           </div>
 
-          <!-- Choix de la Langue -->
           <div>
             <p class="font-bold font-body text-sm text-on-background mb-1 flex items-center gap-2">
               <span class="material-symbols-outlined text-primary text-base">translate</span>
@@ -194,10 +225,10 @@ function injectModals() {
             <p class="text-xs text-on-surface-variant font-body mb-3" data-i18n="settings_lang_desc">${t("settings_lang_desc")}</p>
             <div class="grid grid-cols-2 gap-3">
               <button type="button" onclick="setLang('fr')" class="px-4 py-2.5 rounded-xl border border-outline-variant text-sm font-bold font-body flex items-center justify-center gap-2 transition-all ${currentLang() === 'fr' ? 'bg-primary-container text-on-primary-container border-primary' : 'bg-surface-container-low text-on-surface-variant'}">
-                <span class="material-symbols-outlined text-base">language</span> Français
+                Français
               </button>
               <button type="button" onclick="setLang('en')" class="px-4 py-2.5 rounded-xl border border-outline-variant text-sm font-bold font-body flex items-center justify-center gap-2 transition-all ${currentLang() === 'en' ? 'bg-primary-container text-on-primary-container border-primary' : 'bg-surface-container-low text-on-surface-variant'}">
-                <span class="material-symbols-outlined text-base">public</span> English
+                English
               </button>
             </div>
           </div>
@@ -225,7 +256,7 @@ function injectModals() {
         <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 soft-shadow">
           <div class="flex items-center justify-between mb-1">
             <span class="text-xs font-bold font-label uppercase tracking-wider text-primary" data-i18n="notif_1_title">${t("notif_1_title")}</span>
-            <span class="text-[10px] text-on-surface-variant">Nouveau</span>
+            <span class="text-[10px] text-on-surface-variant">Info</span>
           </div>
           <p class="text-xs text-on-surface-variant font-body leading-relaxed" data-i18n="notif_1_desc">${t("notif_1_desc")}</p>
         </div>
@@ -292,17 +323,17 @@ function mountAuthedChrome(user) {
   if (dAvatar) dAvatar.src = url;
   if (dName) dName.textContent = user.nom.split(" ")[0];
 
-  // Gestion du Header Mobile (EXCLUSIF LOGO À GAUCHE, BOUTONS À DROITE)
+  // Header Mobile : Logo uniquement à gauche, Icônes Notifications & Paramètres à droite
   const mobileHeader = document.querySelector("header.md\\:hidden");
   if (mobileHeader) {
     mobileHeader.innerHTML = `
       <a href="/dashboard.html" class="font-headline text-2xl font-bold text-primary tracking-tight">NetInit</a>
       <div class="flex items-center gap-2">
-        <button type="button" onclick="openNotificationsDrawer()" class="relative p-2 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors" title="Notifications">
+        <button type="button" onclick="openNotificationsDrawer()" class="relative p-2 rounded-xl text-on-surface-variant hover:text-primary transition-colors" title="Notifications">
           <span class="material-symbols-outlined text-2xl">notifications</span>
           <span id="notif-badge" class="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-primary border-2 border-background"></span>
         </button>
-        <button type="button" onclick="openSettingsModal()" class="p-2 rounded-xl text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors" title="Paramètres">
+        <button type="button" onclick="openSettingsModal()" class="p-2 rounded-xl text-on-surface-variant hover:text-primary transition-colors" title="Paramètres">
           <span class="material-symbols-outlined text-2xl">settings</span>
         </button>
       </div>
@@ -318,11 +349,13 @@ function mountAuthedChrome(user) {
   };
   const b1 = document.getElementById("logout-btn-desktop");
   const b2 = document.getElementById("logout-btn-mobile");
+  const b3 = document.getElementById("logout-btn-page");
   if (b1) b1.addEventListener("click", doLogout);
   if (b2) b2.addEventListener("click", doLogout);
+  if (b3) b3.addEventListener("click", doLogout);
 }
 
-// ─── En-tête Public ───
+// ─── En-tête Public (SANS icône engrenage sur la landing page) ───
 async function mountPublicNav() {
   injectModals();
   applyTranslations();
@@ -331,9 +364,8 @@ async function mountPublicNav() {
   const slot = document.getElementById("public-nav-slot");
   if (!slot) return user;
   slot.innerHTML = user
-    ? `<a href="/dashboard.html" class="bg-primary text-on-primary font-bold px-5 py-2 rounded-xl text-sm hover:bg-primary/90 transition-colors" data-i18n="nav_dashboard">${t("nav_dashboard")}</a>`
-    : `<button type="button" onclick="openSettingsModal()" class="text-on-surface-variant hover:text-primary p-2 rounded-xl transition-colors" title="Paramètres"><span class="material-symbols-outlined">settings</span></button>
-       <a href="/login.html" class="text-on-surface-variant hover:text-primary font-body text-sm hidden sm:inline">Se connecter</a>
-       <a href="/register.html" class="bg-primary text-on-primary font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-primary/90 transition-colors">Commencer</a>`;
+    ? `<a href="/dashboard.html" class="bg-primary text-on-primary font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors" data-i18n="nav_dashboard">${t("nav_dashboard")}</a>`
+    : `<a href="/login.html" class="text-on-surface-variant hover:text-primary font-body text-sm hidden sm:inline">Se connecter</a>
+       <a href="/register.html" class="bg-primary text-on-primary font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors">Commencer</a>`;
   return user;
 }
