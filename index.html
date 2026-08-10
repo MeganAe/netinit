@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Accueil — NetInit</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Manrope:wght@300..800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        background: "#faf5ee",
+                        surface: "#faf5ee",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f6f0e8",
+                        "surface-container": "#f2ece4",
+                        "surface-container-high": "#ece6dc",
+                        "surface-variant": "#ece6dc",
+                        "outline": "#9a9088",
+                        "outline-variant": "#d8d0c8",
+                        "on-background": "#3a302a",
+                        "on-surface-variant": "#605850",
+                        primary: "#c2652a",
+                        "primary-container": "#fbe8d8",
+                        "primary-fixed": "#fbe8d8",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#7a3a10",
+                        "on-primary-fixed": "#401a08",
+                        secondary: "#78706a",
+                        "secondary-container": "#eae2da",
+                        "on-secondary-container": "#3a302a",
+                        tertiary: "#8c3c3c",
+                        "tertiary-container": "#fce0e0",
+                        "on-tertiary-container": "#5c2020",
+                        success: "#2f7d4f",
+                        "success-container": "#e1f0e5",
+                        error: "#c0392b",
+                        "error-container": "#fce4e0",
+                        gold: "#b8860b",
+                        silver: "#8a8f98",
+                        bronze: "#a1622e",
+                    },
+                    borderRadius: { DEFAULT: "0.5rem", lg: "0.75rem", xl: "1rem", full: "9999px" },
+                    fontFamily: {
+                        headline: ["EB Garamond", "serif"],
+                        display: ["EB Garamond", "serif"],
+                        body: ["Manrope", "sans-serif"],
+                        label: ["Manrope", "sans-serif"],
+                    },
+                },
+            },
+        };
+</script>
+<style>
+        body { background-color: #faf5ee; color: #3a302a; }
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal;
+            font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none;
+            display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr;
+        }
+        .browser-mockup { box-shadow: 0 10px 40px rgba(58,48,42,0.10); border: 1px solid #d8d0c8; }
+        .soft-shadow { box-shadow: 0 2px 16px rgba(58,48,42,0.06); }
+        /* Barres de signal = progression (4 leçons) */
+        .signal-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
+        .signal-bars i { display: block; width: 5px; border-radius: 2px; background: #d8d0c8; }
+        .signal-bars i.on { background: #c2652a; }
+        .signal-bars i:nth-child(1) { height: 7px; } .signal-bars i:nth-child(2) { height: 11px; }
+        .signal-bars i:nth-child(3) { height: 15px; } .signal-bars i:nth-child(4) { height: 20px; }
+        /* Avatars */
+        .avatar-option { border-radius: 9999px; border: 2px solid #d8d0c8; padding: 3px; cursor: pointer; background: #fff; transition: border-color .15s, transform .15s; }
+        .avatar-option:hover { transform: translateY(-2px); }
+        .avatar-option.selected { border-color: #c2652a; box-shadow: 0 0 0 3px #fbe8d8; }
+        .avatar-option img { width: 100%; height: 100%; border-radius: 9999px; display: block; }
+        /* Quiz options */
+        .quiz-option { border: 1px solid #d8d0c8; border-radius: .75rem; padding: 14px 18px; cursor: pointer; transition: border-color .15s, background .15s; display: flex; align-items: center; gap: 12px; font-family: 'Manrope', sans-serif; }
+        .quiz-option:hover { border-color: #c2652a; }
+        .quiz-option.selected { border-color: #c2652a; background: #fbe8d8; }
+        /* Callout astuce */
+        .callout { background: #fbe8d8; border-left: 3px solid #c2652a; border-radius: .5rem; padding: 16px 20px; display: flex; gap: 12px; }
+        /* Prose leçon */
+        .lesson-prose p { margin-bottom: 16px; line-height: 1.75; color: #4a4038; }
+        .lesson-prose h4 { font-family: 'EB Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-top: 28px; margin-bottom: 10px; color: #3a302a; }
+        .lesson-prose ul { margin: 0 0 16px 20px; display: grid; gap: 8px; }
+        .lesson-prose li { line-height: 1.6; color: #4a4038; }
+        .lesson-prose strong { color: #3a302a; }
+        .skeleton { background: linear-gradient(90deg, #ece6dc 25%, #f6f0e8 37%, #ece6dc 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: .5rem; }
+        @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+        input:focus { outline: none; border-color: #c2652a !important; box-shadow: 0 0 0 3px #fbe8d8; }
+</style>
+</head>
+<body class="font-body">
+
+<header class="w-full px-6 md:px-12 py-5 flex items-center justify-between border-b border-outline-variant/60 bg-background sticky top-0 z-40">
+<a href="/index.html" class="font-headline text-2xl font-bold text-primary">NetInit</a>
+<div id="public-nav-slot" class="flex items-center gap-4"></div>
+</header>
+
+<main class="max-w-6xl mx-auto px-6 md:px-12">
+
+  <section class="grid md:grid-cols-2 gap-12 items-center py-16 md:py-24">
+    <div>
+      <span class="inline-block bg-primary-container text-on-primary-container text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-6 font-label">Projet tutoré · UCB</span>
+      <h1 class="font-headline text-4xl md:text-6xl font-bold leading-[1.05] mb-6">Maîtrisez les bases <em class="text-primary not-italic">d'Internet</em></h1>
+      <p class="text-lg text-on-surface-variant font-body max-w-lg mb-8">Un parcours d'apprentissage interactif conçu pour vous donner les clés de l'autonomie numérique. Simple, chaleureux et direct.</p>
+      <div class="flex flex-wrap gap-4">
+        <a href="/register.html" class="bg-primary text-on-primary font-bold px-7 py-3.5 rounded-lg hover:bg-primary/90 transition-colors font-body">Commencer l'aventure</a>
+        <a href="#lecons" class="border border-outline text-on-background font-bold px-7 py-3.5 rounded-lg hover:bg-surface-container transition-colors font-body">Explorer le programme</a>
+      </div>
+    </div>
+    <div class="browser-mockup rounded-xl overflow-hidden bg-surface-container-lowest">
+      <div class="flex items-center gap-2 px-4 py-3 bg-surface-container border-b border-outline-variant/60">
+        <span class="w-2.5 h-2.5 rounded-full bg-tertiary/50"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-primary/50"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-success/50"></span>
+        <span class="ml-3 text-xs font-body text-on-surface-variant bg-surface-container-lowest px-3 py-1 rounded-full border border-outline-variant/60">netinit.ucb.ac.cd</span>
+      </div>
+      <img src="https://images.unsplash.com/photo-1758270705290-62b6294dd044?w=1400&q=80&auto=format&fit=crop" alt="Étudiants apprenant ensemble sur un ordinateur portable" class="w-full h-72 object-cover"/>
+    </div>
+  </section>
+
+  <section id="lecons" class="py-16">
+    <div class="text-center max-w-xl mx-auto mb-12">
+      <h2 class="font-headline text-3xl md:text-4xl font-bold mb-4">Nos 4 Leçons Fondamentales</h2>
+      <p class="text-on-surface-variant font-body">Un programme structuré pour vous guider pas à pas dans l'écosystème numérique.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-5" id="preview-grid"></div>
+  </section>
+
+  <section class="py-16">
+    <div class="text-center max-w-xl mx-auto mb-12">
+      <span class="text-primary font-label text-xs font-bold uppercase tracking-widest">Processus</span>
+      <h2 class="font-headline text-3xl md:text-4xl font-bold mt-2">Comment ça marche</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8 text-center">
+      <div>
+        <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-lg flex items-center justify-center mx-auto mb-4">1</div>
+        <h3 class="font-headline text-xl font-bold mb-2">S'inscrire</h3>
+        <p class="text-sm text-on-surface-variant font-body">Créez votre profil en quelques clics avec votre progression personnalisée.</p>
+      </div>
+      <div>
+        <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-lg flex items-center justify-center mx-auto mb-4">2</div>
+        <h3 class="font-headline text-xl font-bold mb-2">Apprendre</h3>
+        <p class="text-sm text-on-surface-variant font-body">Suivez les leçons interactives conçues pour être claires, simples et directes.</p>
+      </div>
+      <div>
+        <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-lg flex items-center justify-center mx-auto mb-4">3</div>
+        <h3 class="font-headline text-xl font-bold mb-2">Valider</h3>
+        <p class="text-sm text-on-surface-variant font-body">Testez vos connaissances au quiz et obtenez des badges pour prouver votre maîtrise.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="border-t border-outline-variant/60 py-8 mt-16">
+<div class="max-w-6xl mx-auto px-6 text-center">
+<div class="flex justify-center gap-6 text-sm text-on-surface-variant font-body mb-3">
+<a class="hover:text-primary" href="/index.html">Institution</a>
+<a class="hover:text-primary" href="/index.html">Crédits</a>
+<a class="hover:text-primary" href="/index.html">Contact</a>
+</div>
+<p class="text-xs text-on-surface-variant/70 font-body">© Université Catholique de Bukavu - Projet Tutoré NetInit</p>
+</div>
+</footer>
+
+
+<script src="/js/common.js"></script>
+<script>
+  mountPublicNav();
+  const lessons = [
+    { icone: "compass", titre: "Navigateur", resume: "Découvrez votre outil principal : onglets, favoris, historique et navigation privée." },
+    { icone: "search", titre: "Recherche", resume: "Maîtrisez les moteurs de recherche pour trouver l'information pertinente rapidement." },
+    { icone: "mail", titre: "E-mail", resume: "Communiquez efficacement : rédaction, pièces jointes et gestion de la boîte de réception." },
+    { icone: "shield", titre: "Sécurité", resume: "Protégez vos données personnelles et reconnaissez les pièges du web." },
+  ];
+  const iconMap = { compass: "explore", search: "search", mail: "mail", shield: "shield_lock" };
+  document.getElementById("preview-grid").innerHTML = lessons.map((l, i) => `
+    <a href="/register.html" class="soft-shadow bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 flex items-start gap-4 hover:border-primary/50 transition-colors">
+      <div class="w-11 h-11 shrink-0 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center">
+        <span class="material-symbols-outlined text-xl">${iconMap[l.icone]}</span>
+      </div>
+      <div>
+        <h3 class="font-headline text-lg font-bold mb-1">${l.titre}</h3>
+        <p class="text-sm text-on-surface-variant font-body mb-2">${l.resume}</p>
+        <span class="text-primary text-sm font-bold font-body">Explorer →</span>
+      </div>
+    </a>
+  `).join("");
+</script>
+
+</body></html>
