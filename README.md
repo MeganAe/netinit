@@ -1,65 +1,133 @@
-# AlertBukavu — Bureau d'apprentissage macOS
+# NetInit — Plateforme d'apprentissage en ligne (Projet tutoré UCB)
 
-## ⚠️ Important : ce projet doit être hébergé, pas ouvert en double-cliquant
+Plateforme web permettant aux nouveaux étudiants de l'UCB de s'initier à
+Internet (navigateur, recherche, email, sécurité en ligne) à travers 4
+leçons courtes suivies chacune d'un quiz, avec suivi de progression.
 
-Contrairement à un simple fichier HTML, ce projet est composé de plusieurs
-fichiers (index.html, shell.css, shell.js, manifest.json, et les vrais
-fichiers de chacun dans students/). Le navigateur a besoin de les charger
-via une adresse http:// ou https:// pour que tout fonctionne (c'est une
-règle de sécurité de tous les navigateurs, pas un bug de ce projet).
+**Cette version est prête à être déployée sur Vercel.**
 
-Si tu ouvres index.html directement depuis tes fichiers (file://), le
-bureau va s'afficher mais les dossiers resteront vides.
+## Stack technique
 
-## Comment le mettre en ligne (gratuit, 2 minutes, sans rien installer)
+- **Frontend** : HTML, CSS, JavaScript (aucun framework, aucun build)
+- **Backend** : Node.js + Express, exécuté comme fonction serverless (`/api`)
+- **Authentification** : cookie JWT httpOnly (sans état — compatible serverless)
+- **Base de données** :
+  - En **local** : SQLite via le module natif `node:sqlite` — zéro configuration
+  - Sur **Vercel** : Postgres via l'intégration **Neon** (Marketplace Vercel) — bascule automatique dès que `DATABASE_URL` (ou `POSTGRES_URL`) est présente
 
-**Avec Vercel (recommandé, c'est ce qui héberge déjà AlertBukavu) :**
+## Déployer sur Vercel
 
-1. Va sur https://vercel.com et connecte-toi (ou crée un compte gratuit)
-2. Clique sur "Add New" → "Project"
-3. Choisis "Deploy" sans dépôt Git, puis glisse-dépose tout le dossier
-   `alertbukavu_macos_project` (celui qui contient index.html) dans la zone
-   d'upload
-4. Clique sur "Deploy" — en quelques secondes tu obtiens un lien du type
-   `https://ton-projet.vercel.app`
-5. Envoie ce lien au groupe — tout le monde peut l'ouvrir directement dans
-   son navigateur, y compris sur iPhone, sans rien télécharger
+### 1. Pousser le projet sur GitHub (ou GitLab/Bitbucket)
 
-**Alternative : Netlify** fonctionne pareil (glisser-déposer sur
-https://app.netlify.com/drop).
+Vercel importe un projet depuis un dépôt Git.
+
+### 2. Importer le projet sur vercel.com (premier déploiement)
+
+Dashboard Vercel → **Add New → Project** → sélectionner le dépôt. Aucune
+configuration de build à changer : `vercel.json` s'en charge. Déployer une
+première fois — c'est nécessaire pour pouvoir ensuite rattacher une base de
+données au projet (le projet doit exister au préalable).
+
+À ce stade, le site s'affiche mais les pages qui appellent l'API
+(inscription, connexion...) renverront une erreur : c'est normal, il manque
+encore la base de données. Étape suivante.
+
+### 3. Ajouter une base de données Postgres (via Neon)
+
+Depuis quelque temps, Vercel ne propose plus "Vercel Postgres" en direct :
+la base Postgres est fournie par **Neon**, intégré nativement à Vercel.
+
+Dans le projet Vercel → onglet **Storage** → **Create Database** → choisir
+le provider **Neon** (Postgres) → suivre l'assistant (région, plan gratuit).
+Une fois la base créée, cliquer sur **Connect to Project** et sélectionner
+votre projet NetInit. Vercel injecte alors automatiquement les variables
+`DATABASE_URL` (et éventuellement `POSTGRES_URL`) dans le projet — rien à
+copier manuellement.
+
+### 4. Définir la variable JWT_SECRET
+
+Project **Settings → Environment Variables** → ajouter :
+
+| Nom | Valeur |
+|---|---|
+| `JWT_SECRET` | une chaîne aléatoire longue (voir commande ci-dessous) |
+
+Pour générer une valeur sûre :
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+### 5. Redéployer
+
+Le rattachement de la base déclenche généralement un redéploiement
+automatique. Sinon : onglet **Deployments** → **⋯** sur le dernier
+déploiement → **Redeploy**. Au premier appel à l'API après ce
+redéploiement, les tables sont créées automatiquement et le contenu des
+4 leçons + quiz est inséré (voir `server/db-pg.js`).
+
+## Développement local
+
+Aucune configuration nécessaire — SQLite est utilisé automatiquement :
+
+```bash
+npm install
+npm run dev
+```
+
+Puis ouvrir **http://localhost:3000**. Le fichier `data/netinit.db` est créé
+automatiquement (ignoré par Git). Pour repartir de zéro, supprimer `data/`.
 
 ## Structure du projet
 
 ```
-index.html          → le "bureau" (shell de l'interface)
-shell.css            → les styles de l'interface
-shell.js              → toute la logique (fenêtres, Finder, éditeur, aperçu)
-manifest.json         → qui a quels fichiers (modifiable sans toucher au code)
-students/
-  grace/               → vraies copies des fichiers de Byanibyo Grâce
-  josue/                → vraies copies des fichiers de Fazili Katabwe Josué
-  marie-anne/            → vraies copies des fichiers de Fataki Byambese Marie Anne
-  ornella/                → vraies copies des fichiers de Feza Cizungu Ornella
+netinit-vercel/
+├── api/
+│   └── index.js         → point d'entrée serverless (exporte l'app Express)
+├── server/
+│   ├── app.js             → routes API (Express)
+│   ├── auth.js             → authentification par cookie JWT
+│   ├── db.js                → sélectionne Postgres ou SQLite selon l'environnement
+│   ├── db-pg.js              → backend Postgres (production Vercel)
+│   ├── db-sqlite.js           → backend SQLite (développement local)
+│   └── content.js              → contenu des 4 leçons et de leurs quiz
+├── dev-server.js         → lance l'app en local avec les fichiers statiques
+├── index.html, login.html, register.html, dashboard.html,
+│   lesson.html, quiz.html, progress.html   → pages (à la racine, servies
+│                                              telles quelles par Vercel)
+├── css/style.css
+├── js/common.js
+├── vercel.json            → redirige /api/* vers la fonction serverless
+├── .env.example
+└── package.json
 ```
 
-Tous les fichiers dans `students/` sont des copies strictement identiques
-(vérifiées avec `diff`) aux vrais fichiers du projet AlertBukavu — rien n'a
-été modifié, réécrit ni encodé.
+## Pourquoi ces choix (par rapport à la version précédente)
 
-## Ce que chaque membre peut faire dans l'interface
+Vercel exécute chaque route comme une **fonction serverless** : le système
+de fichiers est en lecture seule (sauf `/tmp`, non partagé) et rien ne
+garantit qu'une même instance traite deux requêtes successives. Deux
+conséquences pour l'architecture initiale (Express classique + SQLite en
+fichier + sessions en mémoire) :
 
-- Cliquer sur son dossier (bureau ou Dock) → voir ses fichiers assignés
-- Cliquer sur un fichier → voir le vrai code source, avec coloration
-  syntaxique et les "points clés à repérer"
-- Onglet "Aperçu" → voir le rendu réel de la page (un vrai iframe qui
-  charge le vrai fichier, pas une simulation)
-- Bouton "Voir en direct" → ouvre la version réellement déployée sur
-  tyu-ten.vercel.app
-- Bouton "Copier le code"
+1. **SQLite en fichier local ne persiste pas** entre deux déploiements ni
+   entre deux invocations → remplacé par **Postgres** en production, avec
+   la même interface de fonctions (`server/db.js`) pour ne rien changer
+   dans les routes.
+2. **Les sessions en mémoire (`express-session` + `MemoryStore`) ne
+   survivent pas** d'une instance à l'autre → remplacées par un **cookie
+   JWT signé**, vérifiable sans état partagé.
 
-## Limite connue
+Le reste (contenu pédagogique, design, fonctionnalités) est identique à la
+version précédente.
 
-Les fichiers HTML référencent `config.js` (le JavaScript métier, volontairement
-non inclus ici) et quelques bibliothèques externes (SweetAlert2, Google Ads).
-Dans l'aperçu, ces éléments ne se chargeront pas — c'est normal, l'objectif
-est de réviser le HTML/CSS, pas de faire tourner l'application complète.
+## Fonctionnalités couvertes (cahier des charges du rapport)
+
+- Inscription / connexion étudiant
+- Consultation des leçons sur le thème Internet
+- Quiz d'auto-évaluation après chaque leçon, avec calcul automatique du score
+- Suivi de progression individuel (leçons terminées, scores, dates)
+
+## Limites connues / pistes d'évolution
+
+- Pas d'espace formateur pour ajouter du contenu sans modifier le code
+- Contenu limité au thème Internet (voir perspectives du rapport)

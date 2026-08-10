@@ -2,128 +2,107 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>AlertBukavu — Bureau d'apprentissage</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/css.min.js"></script>
-<link rel="stylesheet" href="shell.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NetInit — Initiation à Internet pour les nouveaux étudiants de l'UCB</title>
+<link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 
-<div id="desktop">
+<header class="nav"><div id="nav-root"></div></header>
 
-  <!-- Top bar -->
-  <nav id="topbar">
-    <div class="topbar-left">
-      <span class="bell">🔔</span>
-      <span class="brand">AlertBukavu</span>
-    </div>
-    <div class="topbar-right">
-      <span id="clock">Lun 9:41</span>
-    </div>
-  </nav>
-
-  <!-- Desktop icons (built from manifest.json) -->
-  <div id="desktop-icons"></div>
-
-  <!-- Finder window -->
-  <div id="finder-window" class="window hidden">
-    <div class="window-titlebar drag-handle" data-target="finder-window">
-      <div class="traffic-lights">
-        <button class="tl tl-red" data-action="close" data-target="finder-window"></button>
-        <button class="tl tl-yellow" data-action="minimize" data-target="finder-window"></button>
-        <button class="tl tl-green"></button>
+<main>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Projet tutoré · UCB · Département d'Informatique</span>
+        <h1>Internet, expliqué <em>simplement</em>, pour bien démarrer à l'UCB.</h1>
+        <p class="lead">NetInit accompagne les nouveaux étudiants qui découvrent Internet : naviguer, chercher, écrire un email et rester en sécurité en ligne — quatre leçons courtes, à son propre rythme.</p>
+        <div class="hero-actions">
+          <a href="/register.html" class="btn btn-accent">Créer mon compte</a>
+          <a href="/login.html" class="btn btn-ghost">J'ai déjà un compte</a>
+        </div>
       </div>
-      <div class="window-title" id="finder-title">—</div>
-    </div>
-    <div class="finder-body">
-      <aside class="finder-sidebar" id="finder-sidebar"></aside>
-      <main class="finder-files" id="finder-files"></main>
-    </div>
-  </div>
 
-  <!-- Code editor window -->
-  <div id="code-window" class="window hidden">
-    <div class="window-titlebar drag-handle" data-target="code-window">
-      <div class="traffic-lights">
-        <button class="tl tl-red" data-action="close" data-target="code-window"></button>
-        <button class="tl tl-yellow" data-action="minimize" data-target="code-window"></button>
-        <button class="tl tl-green"></button>
-      </div>
-      <div class="window-title" id="code-title">—</div>
-    </div>
-    <div class="code-tabs">
-      <button class="code-tab active" data-view="code">&lt;/&gt; Code</button>
-      <button class="code-tab" data-view="preview">▶ Aperçu</button>
-    </div>
-    <div class="points-panel" id="code-points"></div>
-    <div class="code-view active" id="view-code">
-      <div class="code-linenums" id="code-lines"></div>
-      <pre class="code-pre"><code id="code-content" class="language-xml"></code></pre>
-    </div>
-    <div class="code-view" id="view-preview">
-      <iframe id="preview-frame" title="Aperçu en direct" sandbox="allow-scripts allow-forms allow-popups"></iframe>
-    </div>
-    <div class="code-footer">
-      <div class="footer-left">
-        <span>main</span>
-      </div>
-      <div class="footer-right">
-        <span id="lang-label">HTML</span>
-        <button class="btn" id="copy-btn">Copier le code</button>
-        <button class="btn" id="refresh-btn" title="Actualiser l'aperçu">⟳</button>
-        <a class="btn primary" id="live-link" href="#" target="_blank" rel="noopener">▶ Voir en direct (site déployé)</a>
+      <div class="browser-mock" aria-hidden="true">
+        <div class="browser-bar">
+          <span class="signal-mark"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+          <span class="address">netinit.ucb<span class="caret"></span></span>
+        </div>
+        <div class="browser-body">
+          <span class="tag">Leçon 2 / 4</span>
+          <h3>Faire une recherche efficace</h3>
+          <p>Des mots-clés précis, des guillemets pour une expression exacte, et un œil sur la source avant d'y croire.</p>
+          <div class="fake-lines"><span></span><span></span><span></span></div>
+        </div>
       </div>
     </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Un seul thème, quatre leçons</h2>
+        <p>Pas de dispersion : NetInit se concentre uniquement sur les bases d'Internet, dans l'ordre où elles sont utiles au quotidien.</p>
+      </div>
+      <div class="lesson-grid" id="preview-grid">
+        <!-- Rempli par script.js à partir du contenu réel des leçons -->
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head">
+        <h2>Comment ça marche</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="n">01</span>
+          <h3>Créer un compte</h3>
+          <p>Une inscription simple avec un nom, un email et un mot de passe.</p>
+        </div>
+        <div class="step">
+          <span class="n">02</span>
+          <h3>Suivre les leçons</h3>
+          <p>Quatre leçons courtes, à lire dans l'ordre ou dans le désordre.</p>
+        </div>
+        <div class="step">
+          <span class="n">03</span>
+          <h3>Vérifier ses acquis</h3>
+          <p>Un petit quiz après chaque leçon, et une progression visible à tout moment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>NetInit — Projet tutoré, Université Catholique de Bukavu, 2025 — 2026.</p>
+    <p>Réalisé par Sifa Munguakonwa Christine</p>
   </div>
+</footer>
 
-  <!-- Mobile: liste des fichiers d'une personne (plein écran) -->
-  <div id="mobile-finder" class="hidden">
-    <div class="mobile-header">
-      <button id="mobile-finder-back">‹ Accueil</button>
-      <div id="mobile-finder-title">—</div>
-      <div style="width:56px"></div>
-    </div>
-    <div class="mobile-finder-list" id="mobile-finder-list"></div>
-  </div>
+<script src="/js/common.js"></script>
+<script>
+  mountNav("/index.html");
 
-  <!-- Mobile fullscreen viewer -->
-  <div id="mobile-viewer" class="hidden">
-    <div class="mobile-header">
-      <button id="mobile-back">‹ Retour</button>
-      <div id="mobile-title">—</div>
-      <div style="width:56px"></div>
+  const preview = [
+    { icone: "compass", titre: "Découvrir Internet et le navigateur", resume: "Ce qu'est Internet, et comment se déplacer avec un navigateur web." },
+    { icone: "search", titre: "Faire une recherche efficace", resume: "Utiliser un moteur de recherche pour trouver une information fiable." },
+    { icone: "mail", titre: "Créer et utiliser une adresse email", resume: "Créer une boîte mail, envoyer un message, respecter quelques règles." },
+    { icone: "shield", titre: "Sécurité et bonnes pratiques en ligne", resume: "Protéger ses données et reconnaître les tentatives d'arnaque." },
+  ];
+  document.getElementById("preview-grid").innerHTML = preview.map((l, i) => `
+    <div class="lesson-card">
+      <div class="top-row">
+        <span class="lesson-num">Leçon ${i + 1} / 4</span>
+        <span class="icon" style="color:var(--amber-dark);">${iconMarkup(l.icone)}</span>
+      </div>
+      <h3>${l.titre}</h3>
+      <p>${l.resume}</p>
     </div>
-    <div class="mobile-tabs">
-      <button class="code-tab active" data-mview="code">Code</button>
-      <button class="code-tab" data-mview="preview">Aperçu</button>
-    </div>
-    <div class="points-panel" id="mobile-points"></div>
-    <div class="mobile-view active" id="mobile-view-code">
-      <pre class="code-pre"><code id="mobile-code-content" class="language-xml"></code></pre>
-    </div>
-    <div class="mobile-view" id="mobile-view-preview">
-      <iframe id="mobile-preview-frame" title="Aperçu en direct" sandbox="allow-scripts allow-forms allow-popups"></iframe>
-    </div>
-    <div class="mobile-footer">
-      <button class="btn" id="mobile-copy-btn">Copier</button>
-      <a class="btn primary" id="mobile-live-link" href="#" target="_blank" rel="noopener">Voir en direct</a>
-    </div>
-  </div>
-
-  <!-- Dock -->
-  <div id="dock"></div>
-
-  <div id="boot-error" class="hidden">
-    <p>Impossible de charger manifest.json.</p>
-    <p class="small">Ce site doit être servi via http/https (Vercel, Netlify, un serveur local…) — il ne peut pas être ouvert directement en double-cliquant sur le fichier, car les navigateurs bloquent la lecture de fichiers locaux pour des raisons de sécurité.</p>
-  </div>
-
-</div>
-
-<script src="shell.js"></script>
+  `).join("");
+</script>
 </body>
 </html>
