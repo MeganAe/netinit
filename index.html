@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr"><head>
+<html lang="fr" class="scroll-smooth">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Accueil — NetInit</title>
+<title>NetInit — Plateforme d'apprentissage numérique</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -57,7 +58,18 @@
         };
 </script>
 <style>
-        body { background-color: #faf5ee; color: #3a302a; }
+        body { background-color: #faf5ee; color: #3a302a; transition: background-color 0.2s, color 0.2s; }
+        .dark body { background-color: #1a1614; color: #ece6dc; }
+        .dark .bg-background { background-color: #1a1614 !important; }
+        .dark .bg-surface { background-color: #241f1c !important; }
+        .dark .bg-surface-container-lowest { background-color: #2b2522 !important; color: #ece6dc !important; }
+        .dark .bg-surface-container-low { background-color: #241f1c !important; }
+        .dark .bg-surface-container { background-color: #2b2522 !important; }
+        .dark .bg-surface-container-high { background-color: #342c28 !important; }
+        .dark .text-on-background { color: #f5efe6 !important; }
+        .dark .text-on-surface-variant { color: #b8aea6 !important; }
+        .dark .border-outline-variant\/60 { border-color: rgba(184, 174, 166, 0.2) !important; }
+        .dark .border-outline-variant\/50 { border-color: rgba(184, 174, 166, 0.2) !important; }
         .material-symbols-outlined {
             font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal;
             font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none;
@@ -65,132 +77,191 @@
         }
         .browser-mockup { box-shadow: 0 10px 40px rgba(58,48,42,0.10); border: 1px solid #d8d0c8; }
         .soft-shadow { box-shadow: 0 2px 16px rgba(58,48,42,0.06); }
-        /* Barres de signal = progression (4 leçons) */
-        .signal-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
-        .signal-bars i { display: block; width: 5px; border-radius: 2px; background: #d8d0c8; }
-        .signal-bars i.on { background: #c2652a; }
-        .signal-bars i:nth-child(1) { height: 7px; } .signal-bars i:nth-child(2) { height: 11px; }
-        .signal-bars i:nth-child(3) { height: 15px; } .signal-bars i:nth-child(4) { height: 20px; }
-        /* Avatars */
-        .avatar-option { border-radius: 9999px; border: 2px solid #d8d0c8; padding: 3px; cursor: pointer; background: #fff; transition: border-color .15s, transform .15s; }
-        .avatar-option:hover { transform: translateY(-2px); }
-        .avatar-option.selected { border-color: #c2652a; box-shadow: 0 0 0 3px #fbe8d8; }
-        .avatar-option img { width: 100%; height: 100%; border-radius: 9999px; display: block; }
-        /* Quiz options */
-        .quiz-option { border: 1px solid #d8d0c8; border-radius: .75rem; padding: 14px 18px; cursor: pointer; transition: border-color .15s, background .15s; display: flex; align-items: center; gap: 12px; font-family: 'Manrope', sans-serif; }
-        .quiz-option:hover { border-color: #c2652a; }
-        .quiz-option.selected { border-color: #c2652a; background: #fbe8d8; }
-        /* Callout astuce */
-        .callout { background: #fbe8d8; border-left: 3px solid #c2652a; border-radius: .5rem; padding: 16px 20px; display: flex; gap: 12px; }
-        /* Prose leçon */
-        .lesson-prose p { margin-bottom: 16px; line-height: 1.75; color: #4a4038; }
-        .lesson-prose h4 { font-family: 'EB Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-top: 28px; margin-bottom: 10px; color: #3a302a; }
-        .lesson-prose ul { margin: 0 0 16px 20px; display: grid; gap: 8px; }
-        .lesson-prose li { line-height: 1.6; color: #4a4038; }
-        .lesson-prose strong { color: #3a302a; }
-        .skeleton { background: linear-gradient(90deg, #ece6dc 25%, #f6f0e8 37%, #ece6dc 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: .5rem; }
-        @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
-        input:focus { outline: none; border-color: #c2652a !important; box-shadow: 0 0 0 3px #fbe8d8; }
 </style>
 </head>
-<body class="font-body">
+<body class="font-body bg-background text-on-background">
 
-<header class="w-full px-6 md:px-12 py-5 flex items-center justify-between border-b border-outline-variant/60 bg-background sticky top-0 z-40">
-<a href="/index.html" class="font-headline text-2xl font-bold text-primary">NetInit</a>
-<div id="public-nav-slot" class="flex items-center gap-4"></div>
+<header class="w-full px-6 md:px-12 py-5 flex items-center justify-between border-b border-outline-variant/60 bg-background/90 backdrop-blur-md sticky top-0 z-40">
+<a href="/index.html" class="font-headline text-2xl font-bold text-primary tracking-tight">NetInit</a>
+<div id="public-nav-slot" class="flex items-center gap-3"></div>
 </header>
 
 <main class="max-w-6xl mx-auto px-6 md:px-12">
 
+  <!-- Hero Section -->
   <section class="grid md:grid-cols-2 gap-12 items-center py-16 md:py-24">
     <div>
-      <span class="inline-block bg-primary-container text-on-primary-container text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-6 font-label">Projet tutoré · UCB</span>
-      <h1 class="font-headline text-4xl md:text-6xl font-bold leading-[1.05] mb-6">Maîtrisez les bases <em class="text-primary not-italic">d'Internet</em></h1>
-      <p class="text-lg text-on-surface-variant font-body max-w-lg mb-8">Un parcours d'apprentissage interactif conçu pour vous donner les clés de l'autonomie numérique. Simple, chaleureux et direct.</p>
+      <span class="inline-flex items-center gap-2 bg-primary-container text-on-primary-container text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full mb-6 font-label border border-primary/20">
+        <span class="material-symbols-outlined text-base">verified</span> NetInit v2.0
+      </span>
+      <h1 class="font-headline text-4xl md:text-6xl font-bold leading-[1.08] mb-6 text-on-background">Maîtrisez les fondamentaux <em class="text-primary not-italic">du Web & de l'IA</em></h1>
+      <p class="text-lg text-on-surface-variant font-body max-w-lg mb-8 leading-relaxed">Une plateforme d'apprentissage complète structurée en 10 modules interactifs pour développer votre autonomie numérique, sécuriser vos données et réussir votre transition digitale.</p>
       <div class="flex flex-wrap gap-4">
-        <a href="/register.html" class="bg-primary text-on-primary font-bold px-7 py-3.5 rounded-lg hover:bg-primary/90 transition-colors font-body">Commencer l'aventure</a>
-        <a href="#lecons" class="border border-outline text-on-background font-bold px-7 py-3.5 rounded-lg hover:bg-surface-container transition-colors font-body">Explorer le programme</a>
+        <a href="/register.html" class="bg-primary text-on-primary font-bold px-7 py-3.5 rounded-xl hover:bg-primary/90 transition-all font-body shadow-lg shadow-primary/20 flex items-center gap-2">
+          <span>Commencer l'aventure</span>
+          <span class="material-symbols-outlined text-lg">arrow_forward</span>
+        </a>
+        <a href="#lecons" class="border border-outline text-on-background font-bold px-7 py-3.5 rounded-xl hover:bg-surface-container transition-colors font-body">Explorer les 10 leçons</a>
       </div>
     </div>
-    <div class="browser-mockup rounded-xl overflow-hidden bg-surface-container-lowest">
+
+    <!-- Interface Mockup -->
+    <div class="browser-mockup rounded-2xl overflow-hidden bg-surface-container-lowest soft-shadow">
       <div class="flex items-center gap-2 px-4 py-3 bg-surface-container border-b border-outline-variant/60">
-        <span class="w-2.5 h-2.5 rounded-full bg-tertiary/50"></span>
-        <span class="w-2.5 h-2.5 rounded-full bg-primary/50"></span>
-        <span class="w-2.5 h-2.5 rounded-full bg-success/50"></span>
-        <span class="ml-3 text-xs font-body text-on-surface-variant bg-surface-container-lowest px-3 py-1 rounded-full border border-outline-variant/60">netinit.ucb.ac.cd</span>
+        <span class="w-3 h-3 rounded-full bg-tertiary/50"></span>
+        <span class="w-3 h-3 rounded-full bg-primary/50"></span>
+        <span class="w-3 h-3 rounded-full bg-success/50"></span>
+        <span class="ml-3 text-xs font-body text-on-surface-variant bg-surface-container-lowest px-3 py-1 rounded-lg border border-outline-variant/60 flex items-center gap-1">
+          <span class="material-symbols-outlined text-xs text-success">lock</span> https://netinit.vercel.app/
+        </span>
       </div>
-      <img src="https://images.unsplash.com/photo-1758270705290-62b6294dd044?w=1400&q=80&auto=format&fit=crop" alt="Étudiants apprenant ensemble sur un ordinateur portable" class="w-full h-72 object-cover"/>
+      <img src="https://images.unsplash.com/photo-1758270705290-62b6294dd044?w=1400&q=80&auto=format&fit=crop" alt="Étudiants apprenant avec la plateforme NetInit" class="w-full h-80 object-cover"/>
     </div>
   </section>
 
+  <!-- Statistics Bar -->
+  <section class="py-8 border-y border-outline-variant/60 my-6 bg-surface-container-low/50 rounded-2xl p-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div>
+        <p class="font-headline text-3xl md:text-4xl font-bold text-primary">10</p>
+        <p class="text-xs uppercase tracking-wider font-label text-on-surface-variant mt-1">Leçons Interactives</p>
+      </div>
+      <div>
+        <p class="font-headline text-3xl md:text-4xl font-bold text-primary">40</p>
+        <p class="text-xs uppercase tracking-wider font-label text-on-surface-variant mt-1">Questions de Quiz</p>
+      </div>
+      <div>
+        <p class="font-headline text-3xl md:text-4xl font-bold text-primary">100%</p>
+        <p class="text-xs uppercase tracking-wider font-label text-on-surface-variant mt-1">Autonomie Numérique</p>
+      </div>
+      <div>
+        <p class="font-headline text-3xl md:text-4xl font-bold text-primary">Attestation</p>
+        <p class="text-xs uppercase tracking-wider font-label text-on-surface-variant mt-1">Certificat Inclus</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Programme des 10 Leçons -->
   <section id="lecons" class="py-16">
-    <div class="text-center max-w-xl mx-auto mb-12">
-      <h2 class="font-headline text-3xl md:text-4xl font-bold mb-4">Nos 4 Leçons Fondamentales</h2>
-      <p class="text-on-surface-variant font-body">Un programme structuré pour vous guider pas à pas dans l'écosystème numérique.</p>
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="text-primary font-label text-xs font-bold uppercase tracking-widest bg-primary-container/60 px-3 py-1 rounded-full border border-primary/20">Programme Académique</span>
+      <h2 class="font-headline text-3xl md:text-5xl font-bold mt-3 mb-4">Nos 10 Leçons Fondamentales</h2>
+      <p class="text-on-surface-variant font-body leading-relaxed">Un parcours pas-à-pas méthodique allant de la prise en main du navigateur à la maîtrise des outils d'Intelligence Artificielle.</p>
     </div>
-    <div class="grid sm:grid-cols-2 gap-5" id="preview-grid"></div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-2 gap-5" id="preview-grid"></div>
   </section>
 
+  <!-- Démo Quiz Interactif en direct -->
+  <section class="py-16 bg-surface-container-lowest border border-outline-variant/60 rounded-3xl p-8 md:p-12 soft-shadow mb-16">
+    <div class="max-w-2xl mx-auto text-center">
+      <span class="material-symbols-outlined text-primary text-4xl mb-2">quiz</span>
+      <h2 class="font-headline text-3xl font-bold mb-3">Testez vos connaissances en direct</h2>
+      <p class="text-on-surface-variant font-body text-sm mb-8">Essayez cette question d'exemple tirée de notre module sur la cybersécurité :</p>
+      
+      <div id="demo-quiz-container" class="bg-surface-container-low border border-outline-variant/40 rounded-2xl p-6 text-left">
+        <p class="font-headline text-lg font-bold mb-4 text-on-background">Quel réflexe adopter en premier lieu face à un email demandant votre mot de passe sous 24h ?</p>
+        <div class="space-y-2.5" id="demo-options">
+          <button onclick="checkDemoAnswer(this, false)" class="w-full text-left p-3.5 rounded-xl border border-outline-variant/60 bg-surface-container-lowest hover:border-primary transition-all text-sm font-body">Donner mon mot de passe pour ne pas bloquer mon compte</button>
+          <button onclick="checkDemoAnswer(this, true)" class="w-full text-left p-3.5 rounded-xl border border-outline-variant/60 bg-surface-container-lowest hover:border-primary transition-all text-sm font-body">Ignorer le message et vérifier l'adresse de l'expéditeur (phishing)</button>
+          <button onclick="checkDemoAnswer(this, false)" class="w-full text-left p-3.5 rounded-xl border border-outline-variant/60 bg-surface-container-lowest hover:border-primary transition-all text-sm font-body">Transférer l'email à tous mes amis</button>
+        </div>
+        <p id="demo-feedback" class="mt-4 text-sm font-bold font-body hidden"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pourquoi choisir NetInit -->
   <section class="py-16">
     <div class="text-center max-w-xl mx-auto mb-12">
-      <span class="text-primary font-label text-xs font-bold uppercase tracking-widest">Processus</span>
-      <h2 class="font-headline text-3xl md:text-4xl font-bold mt-2">Comment ça marche</h2>
+      <span class="text-primary font-label text-xs font-bold uppercase tracking-widest">Atouts</span>
+      <h2 class="font-headline text-3xl md:text-4xl font-bold mt-2">Pourquoi apprendre avec NetInit</h2>
     </div>
-    <div class="grid md:grid-cols-3 gap-8 text-center">
-      <div>
-        <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-lg flex items-center justify-center mx-auto mb-4">1</div>
-        <h3 class="font-headline text-xl font-bold mb-2">S'inscrire</h3>
-        <p class="text-sm text-on-surface-variant font-body">Créez votre profil en quelques clics avec votre progression personnalisée.</p>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-6 soft-shadow">
+        <div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-2xl">auto_stories</span>
+        </div>
+        <h3 class="font-headline text-xl font-bold mb-2">Apprentissage Structuré</h3>
+        <p class="text-sm text-on-surface-variant font-body leading-relaxed">Chaque leçon est illustrée de schémas explicatifs visuels et récapitulée par un quiz d'évaluation immédiat.</p>
       </div>
-      <div>
-        <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-lg flex items-center justify-center mx-auto mb-4">2</div>
-        <h3 class="font-headline text-xl font-bold mb-2">Apprendre</h3>
-        <p class="text-sm text-on-surface-variant font-body">Suivez les leçons interactives conçues pour être claires, simples et directes.</p>
+      <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-6 soft-shadow">
+        <div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-2xl">military_tech</span>
+        </div>
+        <h3 class="font-headline text-xl font-bold mb-2">Badges & Attestation</h3>
+        <p class="text-sm text-on-surface-variant font-body leading-relaxed">Obtenez des badges de compétences déblocables et téléchargez votre Attestation de Réussite officielle.</p>
       </div>
-      <div>
-        <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-lg flex items-center justify-center mx-auto mb-4">3</div>
-        <h3 class="font-headline text-xl font-bold mb-2">Valider</h3>
-        <p class="text-sm text-on-surface-variant font-body">Testez vos connaissances au quiz et obtenez des badges pour prouver votre maîtrise.</p>
+      <div class="bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-6 soft-shadow">
+        <div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-2xl">devices_wearable</span>
+        </div>
+        <h3 class="font-headline text-xl font-bold mb-2">Accessibilité Totale</h3>
+        <p class="text-sm text-on-surface-variant font-body leading-relaxed">Interface réactive adaptée aux téléphones mobiles, tablettes et ordinateurs, avec mode sombre intégré.</p>
       </div>
     </div>
   </section>
 
 </main>
 
-<footer class="border-t border-outline-variant/60 py-8 mt-16">
+<footer class="border-t border-outline-variant/60 py-10 mt-16 bg-surface-container-low/40">
 <div class="max-w-6xl mx-auto px-6 text-center">
-<div class="flex justify-center gap-6 text-sm text-on-surface-variant font-body mb-3">
-<a class="hover:text-primary" href="/index.html">Institution</a>
-<a class="hover:text-primary" href="/index.html">Crédits</a>
-<a class="hover:text-primary" href="/index.html">Contact</a>
-</div>
-<p class="text-xs text-on-surface-variant/70 font-body">© Université Catholique de Bukavu - Projet Tutoré NetInit</p>
+  <a href="/index.html" class="font-headline text-2xl font-bold text-primary inline-block mb-3">NetInit</a>
+  <div class="flex justify-center gap-6 text-sm text-on-surface-variant font-body mb-4">
+    <a class="hover:text-primary transition-colors" href="/index.html">Accueil</a>
+    <a class="hover:text-primary transition-colors" href="/login.html">Connexion</a>
+    <a class="hover:text-primary transition-colors" href="/register.html">Inscription</a>
+  </div>
+  <p class="text-xs text-on-surface-variant/70 font-body">© NetInit — Plateforme d'apprentissage en ligne. Tous droits réservés.</p>
 </div>
 </footer>
-
 
 <script src="/js/common.js"></script>
 <script>
   mountPublicNav();
+
   const lessons = [
-    { icone: "compass", titre: "Navigateur", resume: "Découvrez votre outil principal : onglets, favoris, historique et navigation privée." },
-    { icone: "search", titre: "Recherche", resume: "Maîtrisez les moteurs de recherche pour trouver l'information pertinente rapidement." },
-    { icone: "mail", titre: "E-mail", resume: "Communiquez efficacement : rédaction, pièces jointes et gestion de la boîte de réception." },
-    { icone: "shield", titre: "Sécurité", resume: "Protégez vos données personnelles et reconnaissez les pièges du web." },
+    { icone: "explore", titre: "1. Navigateur Web", resume: "Comprendre le rôle du navigateur, les URL, onglets et raccourcis essentiels." },
+    { icone: "search", titre: "2. Recherche Efficace", resume: "Utiliser des opérateurs avancés et évaluer la fiabilité des sources en ligne." },
+    { icone: "mail", titre: "3. Adresse E-mail", resume: "Maîtriser les champs CC, CCI, la rédaction et la gestion sécurisée de sa boîte." },
+    { icone: "shield_lock", titre: "4. Sécurité & Mots de Passe", resume: "Mots de passe forts, authentification 2FA, chiffrement HTTPS et hameçonnage." },
+    { icone: "cloud", titre: "5. Stockage Cloud", resume: "Synchronisation multi-appareils, partage de dossiers et règle de sauvegarde 3-2-1." },
+    { icone: "fingerprint", titre: "6. Empreinte Numérique", resume: "Gérer ses traces passives/actives, cookies de suivi et droits de confidentialité." },
+    { icone: "forum", titre: "7. Réseaux Sociaux", resume: "Usages professionnels vs personnels, réputation en ligne et cyber-vigilance." },
+    { icone: "auto_awesome", titre: "8. Intelligence Artificielle", resume: "Comprendre les IA génératives, rédiger de bons prompts et vérifier les réponses." },
+    { icone: "groups", titre: "9. Travail Collaboratif", resume: "Édition de documents partagés, historique des versions et visioconférences." },
+    { icone: "health_and_safety", titre: "10. Hygiène Numérique", resume: "Prévention des malwares, sécurité du Wi-Fi public et mises à jour système." },
   ];
-  const iconMap = { compass: "explore", search: "search", mail: "mail", shield: "shield_lock" };
-  document.getElementById("preview-grid").innerHTML = lessons.map((l, i) => `
-    <a href="/register.html" class="soft-shadow bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 flex items-start gap-4 hover:border-primary/50 transition-colors">
-      <div class="w-11 h-11 shrink-0 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center">
-        <span class="material-symbols-outlined text-xl">${iconMap[l.icone]}</span>
+
+  document.getElementById("preview-grid").innerHTML = lessons.map((l) => `
+    <a href="/register.html" class="soft-shadow bg-surface-container-lowest border border-outline-variant/50 rounded-2xl p-6 flex items-start gap-4 hover:border-primary transition-all group">
+      <div class="w-12 h-12 shrink-0 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center group-hover:scale-105 transition-transform">
+        <span class="material-symbols-outlined text-2xl">${l.icone}</span>
       </div>
-      <div>
-        <h3 class="font-headline text-lg font-bold mb-1">${l.titre}</h3>
-        <p class="text-sm text-on-surface-variant font-body mb-2">${l.resume}</p>
-        <span class="text-primary text-sm font-bold font-body">Explorer →</span>
+      <div class="flex-1 min-w-0">
+        <h3 class="font-headline text-lg font-bold mb-1 text-on-background group-hover:text-primary transition-colors">${l.titre}</h3>
+        <p class="text-sm text-on-surface-variant font-body mb-3 leading-relaxed">${l.resume}</p>
+        <span class="text-primary text-xs font-bold font-body flex items-center gap-1">Découvrir le module <span class="material-symbols-outlined text-sm">arrow_forward</span></span>
       </div>
     </a>
   `).join("");
+
+  function checkDemoAnswer(btn, isCorrect) {
+    const feedback = document.getElementById("demo-feedback");
+    const buttons = document.querySelectorAll("#demo-options button");
+    buttons.forEach((b) => b.disabled = true);
+    
+    if (isCorrect) {
+      btn.classList.add("bg-success-container", "text-success", "border-success");
+      feedback.textContent = "Exact ! C'est une tentative de hameçonnage (phishing). Ne fournissez jamais votre mot de passe.";
+      feedback.className = "mt-4 text-sm font-bold font-body text-success block";
+    } else {
+      btn.classList.add("bg-error-container", "text-error", "border-error");
+      feedback.textContent = "Incorrect. Aucune institution légitime ne vous demandera votre mot de passe par email.";
+      feedback.className = "mt-4 text-sm font-bold font-body text-error block";
+    }
+  }
 </script>
 
-</body></html>
+</body>
+</html>

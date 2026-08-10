@@ -27,9 +27,11 @@ function init() {
           email TEXT NOT NULL UNIQUE,
           mot_de_passe TEXT NOT NULL,
           avatar_seed TEXT NOT NULL DEFAULT '',
+          bio TEXT NOT NULL DEFAULT '',
           date_inscription TIMESTAMP NOT NULL DEFAULT now()
         );`;
       await sql`ALTER TABLE utilisateurs ADD COLUMN IF NOT EXISTS avatar_seed TEXT NOT NULL DEFAULT '';`;
+      await sql`ALTER TABLE utilisateurs ADD COLUMN IF NOT EXISTS bio TEXT NOT NULL DEFAULT '';`;
       await sql`
         CREATE TABLE IF NOT EXISTS lecons (
           id SERIAL PRIMARY KEY,
@@ -55,36 +57,25 @@ function init() {
           UNIQUE(utilisateur_id, lecon_id)
         );`;
 
-      const { rows } = await sql`SELECT COUNT(*)::int AS n FROM lecons`;
-      if (rows[0].n === 0) {
-        for (let i = 0; i < LECONS.length; i++) {
-          const l = LECONS[i];
+      for (let i = 0; i < LECONS.length; i++) {
+        const l = LECONS[i];
+        const { rows: existing } = await sql`SELECT id FROM lecons WHERE ordre = ${l.ordre}`;
+        let leconId;
+        if (existing.length === 0) {
           const { rows: inserted } = await sql`
             INSERT INTO lecons (titre, resume, icone, contenu, astuce, ordre)
             VALUES (${l.titre}, ${l.resume}, ${l.icone}, ${l.contenu}, ${l.astuce || ""}, ${l.ordre})
             RETURNING id`;
-          const leconId = inserted[0].id;
-          for (const q of QUIZ[i]) {
-            await sql`
-              INSERT INTO quiz (lecon_id, question, options, reponse_correcte)
-              VALUES (${leconId}, ${q.q}, ${JSON.stringify(q.options)}, ${q.r})`;
-          }
-        }
-        console.log(`[postgres] Base initialisée : ${LECONS.length} leçons.`);
-      } else {
-        // Synchronise le contenu (texte des leçons + quiz) avec content.js à
-        // chaque démarrage, pour que les mises à jour du contenu pédagogique
-        // se propagent sans perdre les comptes ni la progression des étudiants.
-        for (let i = 0; i < LECONS.length; i++) {
-          const l = LECONS[i];
-          const { rows: existing } = await sql`SELECT id FROM lecons WHERE ordre = ${l.ordre}`;
-          if (existing.length === 0) continue;
-          const leconId = existing[0].id;
+          leconId = inserted[0].id;
+        } else {
+          leconId = existing[0].id;
           await sql`
             UPDATE lecons SET titre = ${l.titre}, resume = ${l.resume}, icone = ${l.icone},
                                contenu = ${l.contenu}, astuce = ${l.astuce || ""}
             WHERE id = ${leconId}`;
-          await sql`DELETE FROM quiz WHERE lecon_id = ${leconId}`;
+        }
+        await sql`DELETE FROM quiz WHERE lecon_id = ${leconId}`;
+        if (QUIZ[i]) {
           for (const q of QUIZ[i]) {
             await sql`
               INSERT INTO quiz (lecon_id, question, options, reponse_correcte)
@@ -92,6 +83,7 @@ function init() {
           }
         }
       }
+      console.log(`[postgres] Base synchronisée : ${LECONS.length} leçons.`);
     })();
   }
   return ready;
@@ -105,7 +97,7 @@ module.exports = {
   },
   getUserById: async (id) => {
     await init();
-    const { rows } = await sql`SELECT id, nom, email, avatar_seed, date_inscription FROM utilisateurs WHERE id = ${id}`;
+    const { rows } = await sql`SELECT id, nom, email, avatar_seed, bio, date_inscription FROM utilisateurs WHERE id = ${id}`;
     return rows[0] || null;
   },
   createUser: async (nom, email, hash, avatarSeed) => {
@@ -114,12 +106,22 @@ module.exports = {
       INSERT INTO utilisateurs (nom, email, mot_de_passe, avatar_seed)
       VALUES (${nom}, ${email}, ${hash}, ${avatarSeed || email})
       RETURNING id, nom, email, avatar_seed`;
-    return rows[0];
+    return { ...rows[0], bio: "" };
   },
   updateAvatar: async (userId, avatarSeed) => {
     await init();
     await sql`UPDATE utilisateurs SET avatar_seed = ${avatarSeed} WHERE id = ${userId}`;
     return true;
+  },
+  updateProfile: async (userId, { nom, bio, avatarSeed }) => {
+    await init();
+    const current = await module.exports.getUserById(userId);
+    if (!current) return false;
+    const newNom = nom ? nom.trim() : current.nom;
+    const newBio = typeof bio === "string" ? bio.trim() : (current.bio || "");
+    const newAvatar = avatarSeed ? avatarSeed : current.avatar_seed;
+    await sql`UPDATE utilisateurs SET nom = ${newNom}, bio = ${newBio}, avatar_seed = ${newAvatar} WHERE id = ${userId}`;
+    return { id: userId, nom: newNom, bio: newBio, avatar_seed: newAvatar, email: current.email };
   },
 
   getLecons: async () => {

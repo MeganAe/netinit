@@ -69,8 +69,15 @@ app.patch("/api/me/avatar", requireAuth, async (req, res) => {
   if (!avatarSeed || typeof avatarSeed !== "string") {
     return res.status(400).json({ error: "Avatar invalide." });
   }
-  await db.updateAvatar(req.userId, avatarSeed.slice(0, 64));
+  await db.updateAvatar(req.userId, avatarSeed.slice(0, 500));
   res.json({ ok: true });
+});
+
+app.patch("/api/me", requireAuth, async (req, res) => {
+  const { nom, bio, avatarSeed } = req.body || {};
+  const updated = await db.updateProfile(req.userId, { nom, bio, avatarSeed });
+  if (!updated) return res.status(404).json({ error: "Utilisateur introuvable." });
+  res.json(updated);
 });
 
 // ─── Leçons ───

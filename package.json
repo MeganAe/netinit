@@ -1,7 +1,7 @@
 {
-  "name": "netinit-ucb",
-  "version": "1.0.0",
-  "description": "NetInit — plateforme d'apprentissage en ligne pour l'initiation à Internet des nouveaux étudiants de l'UCB (projet tutoré). Prête pour un déploiement Vercel.",
+  "name": "netinit",
+  "version": "2.0.0",
+  "description": "NetInit — Plateforme d'apprentissage en ligne pour l'initiation au Numérique, au Web et à l'IA. Déploiement facile sur Vercel.",
   "main": "server/app.js",
   "scripts": {
     "dev": "node dev-server.js",
