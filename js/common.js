@@ -76,28 +76,18 @@ function mountAuthedChrome(user) {
   mountRevealAnimations();
 }
 
-// ─── Nav publique (index/login/register) ───
-async function mountPublicNav(showTools = true) {
+// ─── Nav publique (index/login/register) : jamais d'icônes paramètres/notifications ───
+async function mountPublicNav() {
   let user = null;
   try { user = await api("/api/me"); } catch (_) { user = null; }
   const slot = document.getElementById("public-nav-slot");
   if (slot) {
-    slot.innerHTML = (user
-      ? `<a href="/dashboard.html" class="bg-primary text-on-primary font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors" data-i18n="nav.myDashboard">Mon tableau de bord</a>`
-      : `<a href="/login.html" class="text-on-surface-variant hover:text-primary font-body text-sm hidden sm:inline" data-i18n="nav.login">Se connecter</a>
-         <a href="/register.html" class="bg-primary text-on-primary font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors" data-i18n="nav.start">Commencer</a>`
-    ) + (showTools ? `
-      <button class="relative text-on-surface-variant hover:text-primary transition-colors p-2" id="notif-open-mobile" title="Notifications">
-        <span class="material-symbols-outlined">notifications</span>
-        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full notif-dot"></span>
-      </button>
-      <button class="text-on-surface-variant hover:text-primary transition-colors p-2" id="settings-open-mobile" title="Paramètres">
-        <span class="material-symbols-outlined">settings</span>
-      </button>` : "");
+    slot.innerHTML = user
+      ? `<a href="/dashboard.html" class="bg-primary text-on-primary font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors">Mon tableau de bord</a>`
+      : `<a href="/login.html" class="text-on-surface-variant hover:text-primary font-body text-sm hidden sm:inline">Se connecter</a>
+         <a href="/register.html" class="bg-primary text-on-primary font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors">Commencer</a>`;
   }
-  if (showTools) mountPanels(!!user);
   mountRevealAnimations();
-  applyLanguage(getLanguage());
   return user;
 }
 
@@ -155,62 +145,8 @@ function mountPanels(showLogout = true) {
       darkToggle.classList.toggle("on", nowDark);
     });
   }
-
-  // Langue
-  const langFr = document.getElementById("lang-fr");
-  const langEn = document.getElementById("lang-en");
-  const current = getLanguage();
-  if (langFr) langFr.classList.toggle("active", current === "fr");
-  if (langEn) langEn.classList.toggle("active", current === "en");
-  if (langFr) langFr.addEventListener("click", () => setLanguage("fr"));
-  if (langEn) langEn.addEventListener("click", () => setLanguage("en"));
 }
 
-// ─── i18n minimal (chrome de l'interface : nav, boutons, panneaux) ───
-const I18N = {
-  fr: {
-    "nav.dashboard": "Tableau de bord", "nav.lessons": "Leçons", "nav.rank": "Classement",
-    "nav.profile": "Profil", "nav.logout": "Déconnexion", "nav.viewProfile": "Voir le profil",
-    "nav.login": "Se connecter", "nav.start": "Commencer", "nav.myDashboard": "Mon tableau de bord",
-    "settings.title": "Paramètres", "settings.darkMode": "Mode sombre", "settings.language": "Langue",
-    "notif.title": "Notifications",
-    "notif.item1.title": "4 nouvelles leçons disponibles",
-    "notif.item1.body": "Réseaux sociaux, stockage cloud, achats en ligne et visioconférence.",
-    "notif.item2.title": "Classement mis à jour", "notif.item2.body": "Suivez votre position parmi les autres apprenants.",
-    "notif.item3.title": "Mode sombre disponible", "notif.item3.body": "Activez-le depuis les paramètres, en haut à droite.",
-    "notif.footer": "D'autres nouveautés arrivent bientôt.",
-  },
-  en: {
-    "nav.dashboard": "Dashboard", "nav.lessons": "Lessons", "nav.rank": "Leaderboard",
-    "nav.profile": "Profile", "nav.logout": "Log out", "nav.viewProfile": "View profile",
-    "nav.login": "Log in", "nav.start": "Get started", "nav.myDashboard": "My dashboard",
-    "settings.title": "Settings", "settings.darkMode": "Dark mode", "settings.language": "Language",
-    "notif.title": "Notifications",
-    "notif.item1.title": "4 new lessons available",
-    "notif.item1.body": "Social media, cloud storage, online shopping and video calls.",
-    "notif.item2.title": "Leaderboard updated", "notif.item2.body": "Track your rank among other learners.",
-    "notif.item3.title": "Dark mode available", "notif.item3.body": "Turn it on from settings, top right.",
-    "notif.footer": "More updates coming soon.",
-  },
-};
-function getLanguage() { return localStorage.getItem("netinit-lang") || "fr"; }
-function setLanguage(lang) {
-  localStorage.setItem("netinit-lang", lang);
-  applyLanguage(lang);
-  const langFr = document.getElementById("lang-fr"), langEn = document.getElementById("lang-en");
-  if (langFr) langFr.classList.toggle("active", lang === "fr");
-  if (langEn) langEn.classList.toggle("active", lang === "en");
-}
-function applyLanguage(lang) {
-  const dict = I18N[lang] || I18N.fr;
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const key = el.getAttribute("data-i18n");
-    if (dict[key]) el.textContent = dict[key];
-  });
-  document.documentElement.lang = lang;
-}
-
-// ─── Animations d'apparition au scroll ───
 function mountRevealAnimations() {
   const els = document.querySelectorAll("[data-animate]");
   if (!els.length) return;
@@ -229,5 +165,3 @@ function mountRevealAnimations() {
   }, { threshold: 0.15 });
   els.forEach((el) => observer.observe(el));
 }
-
-document.addEventListener("DOMContentLoaded", () => applyLanguage(getLanguage()));
