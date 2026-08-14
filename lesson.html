@@ -3,6 +3,13 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Leçon — NetInit</title>
+<script>
+  // Applique le thème avant le premier rendu pour éviter le flash de contenu clair.
+  if (localStorage.getItem("netinit-theme") === "dark" ||
+      (!localStorage.getItem("netinit-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    document.documentElement.classList.add("dark");
+  }
+</script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -57,15 +64,18 @@
         };
 </script>
 <style>
-        body { background-color: #faf5ee; color: #3a302a; }
+        body { background-color: #faf5ee; color: #3a302a; transition: background-color .25s ease, color .25s ease; }
+        html.dark body { background-color: #1c1712; color: #f0e9e0; }
         .material-symbols-outlined {
             font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal;
             font-size: 24px; line-height: 1; letter-spacing: normal; text-transform: none;
             display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr;
         }
         .browser-mockup { box-shadow: 0 10px 40px rgba(58,48,42,0.10); border: 1px solid #d8d0c8; }
+        html.dark .browser-mockup { border-color: #4a3f34; box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
         .soft-shadow { box-shadow: 0 2px 16px rgba(58,48,42,0.06); }
-        /* Barres de signal = progression (4 leçons) */
+        html.dark .soft-shadow { box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+        /* Barres de signal = progression */
         .signal-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
         .signal-bars i { display: block; width: 5px; border-radius: 2px; background: #d8d0c8; }
         .signal-bars i.on { background: #c2652a; }
@@ -73,79 +83,204 @@
         .signal-bars i:nth-child(3) { height: 15px; } .signal-bars i:nth-child(4) { height: 20px; }
         /* Avatars */
         .avatar-option { border-radius: 9999px; border: 2px solid #d8d0c8; padding: 3px; cursor: pointer; background: #fff; transition: border-color .15s, transform .15s; }
-        .avatar-option:hover { transform: translateY(-2px); }
+        .avatar-option:hover { transform: translateY(-2px) scale(1.04); }
         .avatar-option.selected { border-color: #c2652a; box-shadow: 0 0 0 3px #fbe8d8; }
         .avatar-option img { width: 100%; height: 100%; border-radius: 9999px; display: block; }
         /* Quiz options */
-        .quiz-option { border: 1px solid #d8d0c8; border-radius: .75rem; padding: 14px 18px; cursor: pointer; transition: border-color .15s, background .15s; display: flex; align-items: center; gap: 12px; font-family: 'Manrope', sans-serif; }
-        .quiz-option:hover { border-color: #c2652a; }
+        .quiz-option { border: 1px solid #d8d0c8; border-radius: .75rem; padding: 14px 18px; cursor: pointer; transition: border-color .15s, background .15s, transform .1s; display: flex; align-items: center; gap: 12px; font-family: 'Manrope', sans-serif; }
+        .quiz-option:hover { border-color: #c2652a; transform: translateX(2px); }
         .quiz-option.selected { border-color: #c2652a; background: #fbe8d8; }
+        html.dark .quiz-option.selected { background: #4a2e18; }
         /* Callout astuce */
         .callout { background: #fbe8d8; border-left: 3px solid #c2652a; border-radius: .5rem; padding: 16px 20px; display: flex; gap: 12px; }
+        html.dark .callout { background: #3a2a1a; }
         /* Prose leçon */
         .lesson-prose p { margin-bottom: 16px; line-height: 1.75; color: #4a4038; }
+        html.dark .lesson-prose p { color: #cabfb2; }
         .lesson-prose h4 { font-family: 'EB Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-top: 28px; margin-bottom: 10px; color: #3a302a; }
+        html.dark .lesson-prose h4 { color: #f0e9e0; }
         .lesson-prose ul { margin: 0 0 16px 20px; display: grid; gap: 8px; }
         .lesson-prose li { line-height: 1.6; color: #4a4038; }
+        html.dark .lesson-prose li { color: #cabfb2; }
         .lesson-prose strong { color: #3a302a; }
+        html.dark .lesson-prose strong { color: #f0e9e0; }
         .skeleton { background: linear-gradient(90deg, #ece6dc 25%, #f6f0e8 37%, #ece6dc 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: .5rem; }
         @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
         input:focus { outline: none; border-color: #c2652a !important; box-shadow: 0 0 0 3px #fbe8d8; }
+
+        /* ─── Dark mode : surfaces génériques ─── */
+        html.dark .bg-background { background-color: #1c1712 !important; }
+        html.dark .bg-surface-container-lowest { background-color: #26201a !important; }
+        html.dark .bg-surface-container-low { background-color: #241e18 !important; }
+        html.dark .bg-surface-container { background-color: #2c2620 !important; }
+        html.dark .bg-surface-container-high { background-color: #33291e !important; }
+        html.dark .bg-surface { background-color: #1c1712 !important; }
+        html.dark .border-outline-variant\/60 { border-color: #4a3f34 !important; }
+        html.dark .border-outline-variant\/50 { border-color: #4a3f34 !important; }
+        html.dark .border-outline-variant\/40 { border-color: #3a3128 !important; }
+        html.dark .border-outline-variant { border-color: #4a3f34 !important; }
+        html.dark .text-on-background { color: #f0e9e0 !important; }
+        html.dark .text-on-surface-variant { color: #b3a898 !important; }
+        html.dark .bg-primary-container\/30 { background-color: rgba(194,101,42,0.18) !important; }
+
+        /* ─── Animations d'apparition ─── */
+        [data-animate] { opacity: 0; }
+        [data-animate].in-view { animation: fadeSlideUp .7s cubic-bezier(.22,1,.36,1) forwards; }
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+        .float-slow { animation: floatSlow 6s ease-in-out infinite; }
+        @keyframes floatSlow { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .hover-lift { transition: transform .2s ease, box-shadow .2s ease; }
+        .hover-lift:hover { transform: translateY(-3px); }
+        @media (prefers-reduced-motion: reduce) {
+          [data-animate] { opacity: 1 !important; animation: none !important; }
+          .float-slow { animation: none !important; }
+        }
+
+        /* ─── Panneaux (paramètres / notifications) ─── */
+        .panel-backdrop { background: rgba(28,23,18,0.4); backdrop-filter: blur(2px); }
+        .panel-sheet { animation: sheetIn .25s cubic-bezier(.22,1,.36,1); }
+        @keyframes sheetIn { from { opacity:0; transform: translateY(12px) scale(.98); } to { opacity:1; transform: translateY(0) scale(1); } }
+        .toggle-track { width: 44px; height: 26px; border-radius: 999px; background: #d8d0c8; position: relative; transition: background .2s ease; cursor: pointer; flex-shrink: 0; }
+        .toggle-track.on { background: #c2652a; }
+        .toggle-thumb { width: 20px; height: 20px; border-radius: 999px; background: #fff; position: absolute; top: 3px; left: 3px; transition: transform .2s ease; }
+        .toggle-track.on .toggle-thumb { transform: translateX(18px); }
+        .lang-btn { padding: 6px 14px; border-radius: 999px; font-size: .82rem; font-weight: 700; border: 1px solid #d8d0c8; }
+        .lang-btn.active { background: #c2652a; color: #fff; border-color: #c2652a; }
 </style>
 </head>
 <body class="font-body bg-background">
 
 
-<!-- Mobile Top AppBar -->
+<!-- Mobile Top AppBar : nom de la plateforme à gauche, paramètres + notifications à droite -->
 <header class="md:hidden flex justify-between items-center w-full px-6 py-4 bg-background border-b border-outline-variant/60 sticky top-0 z-40">
-<a href="/dashboard.html" class="flex items-center gap-3">
-<img alt="Avatar" class="w-10 h-10 rounded-full border-2 border-primary-container bg-surface-container" id="mnav-avatar" src=""/>
-<span class="font-headline text-2xl font-bold text-primary">NetInit</span>
-</a>
-<button class="text-on-surface-variant hover:text-primary transition-colors" id="logout-btn-mobile" title="Déconnexion">
-<span class="material-symbols-outlined">logout</span>
+<a href="/dashboard.html" class="font-headline text-2xl font-bold text-primary">NetInit</a>
+<div class="flex items-center gap-2">
+<button class="relative text-on-surface-variant hover:text-primary transition-colors p-2" id="notif-open-mobile" title="Notifications">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full"></span>
 </button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2" id="settings-open-mobile" title="Paramètres">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
 </header>
 <!-- Desktop SideNav -->
 <nav class="hidden md:flex flex-col h-screen w-72 bg-surface border-r border-outline-variant/60 shadow-md fixed inset-y-0 left-0 z-50">
 <div class="p-6 border-b border-outline-variant/60">
-<a href="/profile.html" class="flex items-center gap-4 mb-1">
+<div class="flex items-center justify-between mb-4">
+<a href="/dashboard.html" class="font-headline text-2xl font-bold text-primary">NetInit</a>
+<div class="flex items-center gap-1">
+<button class="relative text-on-surface-variant hover:text-primary transition-colors p-1.5" id="notif-open-desktop" title="Notifications">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-primary rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1.5" id="settings-open-desktop" title="Paramètres">
+<span class="material-symbols-outlined text-xl">settings</span>
+</button>
+</div>
+</div>
+<a href="/profile.html" class="flex items-center gap-4">
 <img alt="Avatar" class="w-12 h-12 rounded-full border-2 border-primary-container bg-surface-container" id="dnav-avatar" src=""/>
 <div>
-<h2 class="font-headline text-xl text-primary font-bold" id="dnav-name">—</h2>
-<p class="text-sm text-on-surface-variant font-body">NetInit Platform</p>
+<h2 class="font-headline text-lg text-on-background font-bold" id="dnav-name">—</h2>
+<p class="text-xs text-on-surface-variant font-body" data-i18n="nav.viewProfile">Voir le profil</p>
 </div>
 </a>
 </div>
 <div class="flex-1 py-4 overflow-y-auto">
-<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html" id="nav-d-dashboard"><span class="material-symbols-outlined" style="">dashboard</span><span class="font-body">Tableau de bord</span></a>
-<a class="flex items-center gap-3 bg-primary-container text-on-primary-container font-bold rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html#lecons" id="nav-d-lessons"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span><span class="font-body">Leçons</span></a>
-<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/leaderboard.html" id="nav-d-rank"><span class="material-symbols-outlined" style="">leaderboard</span><span class="font-body">Classement</span></a>
-<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/profile.html" id="nav-d-profile"><span class="material-symbols-outlined" style="">person</span><span class="font-body">Profil</span></a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html"><span class="material-symbols-outlined" style="">dashboard</span><span class="font-body" data-i18n="nav.dashboard">Tableau de bord</span></a>
+<a class="flex items-center gap-3 bg-primary-container text-on-primary-container font-bold rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/dashboard.html"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span><span class="font-body" data-i18n="nav.lessons">Leçons</span></a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/leaderboard.html"><span class="material-symbols-outlined" style="">leaderboard</span><span class="font-body" data-i18n="nav.rank">Classement</span></a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg m-2 px-4 py-3 transition-all duration-200" href="/profile.html"><span class="material-symbols-outlined" style="">person</span><span class="font-body" data-i18n="nav.profile">Profil</span></a>
 </div>
 <div class="p-4 border-t border-outline-variant/60">
 <button class="flex items-center gap-3 text-on-surface-variant hover:text-error transition-colors w-full px-4 py-2" id="logout-btn-desktop">
 <span class="material-symbols-outlined">logout</span>
-<span class="font-body text-sm">Déconnexion</span>
+<span class="font-body text-sm" data-i18n="nav.logout">Déconnexion</span>
 </button>
 </div>
 </nav>
 <!-- Mobile Bottom Navigation Bar -->
 <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 bg-surface-container-low shadow-[0_-2px_16px_rgba(58,48,42,0.08)] z-50 rounded-t-xl pb-6">
-<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/dashboard.html"><span class="material-symbols-outlined" style="">dashboard</span><span class="font-label text-xs uppercase tracking-wider mt-1">Tableau</span></a>
-<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 transition-transform" href="/dashboard.html#lecons"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span><span class="font-label text-xs uppercase tracking-wider mt-1">Leçons</span></a>
-<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/leaderboard.html"><span class="material-symbols-outlined" style="">leaderboard</span><span class="font-label text-xs uppercase tracking-wider mt-1">Classement</span></a>
-<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/profile.html"><span class="material-symbols-outlined" style="">person</span><span class="font-label text-xs uppercase tracking-wider mt-1">Profil</span></a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/dashboard.html"><span class="material-symbols-outlined" style="">dashboard</span><span class="font-label text-xs uppercase tracking-wider mt-1" data-i18n="nav.dashboard">Tableau</span></a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 transition-transform" href="/dashboard.html"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span><span class="font-label text-xs uppercase tracking-wider mt-1" data-i18n="nav.lessons">Leçons</span></a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/leaderboard.html"><span class="material-symbols-outlined" style="">leaderboard</span><span class="font-label text-xs uppercase tracking-wider mt-1" data-i18n="nav.rank">Classement</span></a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/profile.html"><span class="material-symbols-outlined" style="">person</span><span class="font-label text-xs uppercase tracking-wider mt-1" data-i18n="nav.profile">Profil</span></a>
 </nav>
+
+<!-- Panneau Paramètres -->
+<div class="fixed inset-0 z-[100] hidden items-end sm:items-center justify-center panel-backdrop" id="settings-backdrop">
+  <div class="bg-surface-container-lowest w-full sm:max-w-sm sm:rounded-xl rounded-t-2xl p-6 panel-sheet">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-headline text-xl font-bold" data-i18n="settings.title">Paramètres</h3>
+      <button id="settings-close" class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="flex items-center justify-between py-3 border-b border-outline-variant/50">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-on-surface-variant">dark_mode</span>
+        <span class="font-body text-sm" data-i18n="settings.darkMode">Mode sombre</span>
+      </div>
+      <div class="toggle-track" id="dark-mode-toggle"><div class="toggle-thumb"></div></div>
+    </div>
+    <div class="py-3 border-b border-outline-variant/50">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="material-symbols-outlined text-on-surface-variant">language</span>
+        <span class="font-body text-sm" data-i18n="settings.language">Langue</span>
+      </div>
+      <div class="flex gap-2 ml-9">
+        <button class="lang-btn" id="lang-fr" data-lang="fr">Français</button>
+        <button class="lang-btn" id="lang-en" data-lang="en">English</button>
+      </div>
+    </div>
+    <button class="w-full flex items-center gap-3 text-error font-bold font-body py-3 mt-2" id="settings-logout">
+      <span class="material-symbols-outlined">logout</span> <span data-i18n="nav.logout">Déconnexion</span>
+    </button>
+  </div>
+</div>
+
+<!-- Panneau Notifications -->
+<div class="fixed inset-0 z-[100] hidden items-start justify-center sm:justify-end panel-backdrop" id="notif-backdrop">
+  <div class="bg-surface-container-lowest w-full sm:max-w-sm sm:mt-16 sm:mr-6 rounded-b-2xl sm:rounded-xl p-6 panel-sheet max-h-[80vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="font-headline text-xl font-bold" data-i18n="notif.title">Notifications</h3>
+      <button id="notif-close" class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="grid gap-3">
+      <div class="flex gap-3 p-3 rounded-lg bg-primary-container/40">
+        <span class="material-symbols-outlined text-primary">auto_awesome</span>
+        <div>
+          <p class="font-bold text-sm font-body" data-i18n="notif.item1.title">4 nouvelles leçons disponibles</p>
+          <p class="text-xs text-on-surface-variant font-body mt-0.5" data-i18n="notif.item1.body">Réseaux sociaux, stockage cloud, achats en ligne et visioconférence.</p>
+        </div>
+      </div>
+      <div class="flex gap-3 p-3 rounded-lg">
+        <span class="material-symbols-outlined text-on-surface-variant">leaderboard</span>
+        <div>
+          <p class="font-bold text-sm font-body" data-i18n="notif.item2.title">Classement mis à jour</p>
+          <p class="text-xs text-on-surface-variant font-body mt-0.5" data-i18n="notif.item2.body">Suivez votre position parmi les autres apprenants.</p>
+        </div>
+      </div>
+      <div class="flex gap-3 p-3 rounded-lg">
+        <span class="material-symbols-outlined text-on-surface-variant">palette</span>
+        <div>
+          <p class="font-bold text-sm font-body" data-i18n="notif.item3.title">Mode sombre disponible</p>
+          <p class="text-xs text-on-surface-variant font-body mt-0.5" data-i18n="notif.item3.body">Activez-le depuis les paramètres, en haut à droite.</p>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-xs text-on-surface-variant font-body mt-5" data-i18n="notif.footer">D'autres nouveautés arrivent bientôt.</p>
+  </div>
+</div>
+
 
 <main class="flex-1 md:ml-72 flex flex-col min-h-screen pb-20 md:pb-0">
 <div class="p-6 md:p-12 max-w-3xl mx-auto w-full flex-1">
 
   <div class="flex items-center gap-2 text-xs font-body text-on-surface-variant mb-6" id="crumb">
-    <span class="material-symbols-outlined text-sm">lock</span> netinit.ucb / leçon
+    <span class="material-symbols-outlined text-sm">lock</span> netinit.vercel.app / leçon
   </div>
 
-  <article id="lesson-article">
+  <article id="lesson-article" data-animate>
     <div class="skeleton h-10 w-2/3 mb-4"></div>
     <div class="skeleton h-4 w-full mb-2"></div>
     <div class="skeleton h-56 w-full mt-6"></div>
@@ -162,6 +297,10 @@
     2: "https://images.unsplash.com/photo-1743796055664-3473eedab36e?w=1200&q=80&auto=format&fit=crop",
     3: "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=1200&q=80&auto=format&fit=crop",
     4: "https://images.unsplash.com/photo-1768839720936-87ce3adf2d08?w=1200&q=80&auto=format&fit=crop",
+    5: "https://images.unsplash.com/photo-1745848413078-f85af10e5bf2?w=1200&q=80&auto=format&fit=crop",
+    6: "https://images.unsplash.com/photo-1758270705290-62b6294dd044?w=1200&q=80&auto=format&fit=crop",
+    7: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&q=80&auto=format&fit=crop",
+    8: "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=1200&q=80&auto=format&fit=crop",
   };
 
   (async () => {
@@ -181,7 +320,7 @@
 
     const slug = lesson.titre.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").split(" ").slice(0, 2).join("-");
     document.getElementById("crumb").innerHTML = `
-      <span class="material-symbols-outlined text-sm">lock</span> netinit.ucb / lecon / ${slug}`;
+      <span class="material-symbols-outlined text-sm">lock</span> netinit.vercel.app / lecon / ${slug}`;
 
     document.getElementById("lesson-article").innerHTML = `
       <h1 class="font-headline text-3xl md:text-4xl font-bold mb-3 leading-tight">${lesson.titre}</h1>
@@ -200,12 +339,13 @@
         <a href="/dashboard.html" class="text-on-surface-variant hover:text-primary font-body text-sm flex items-center gap-1">
           <span class="material-symbols-outlined text-base">arrow_back</span> Retour
         </a>
-        <a href="/quiz.html?id=${lesson.id}" class="bg-primary text-on-primary font-bold px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-body flex items-center gap-2">
+        <a href="/quiz.html?id=${lesson.id}" class="bg-primary text-on-primary font-bold px-6 py-3 rounded-lg hover:bg-primary/90 transition-all hover:shadow-lg font-body flex items-center gap-2">
           ${lesson.terminee ? `Refaire le quiz (${lesson.score}/${lesson.total})` : "Commencer le Quiz"}
           <span class="material-symbols-outlined text-lg">arrow_forward</span>
         </a>
       </div>
     `;
+    mountRevealAnimations();
   })();
 </script>
 

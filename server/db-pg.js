@@ -121,6 +121,17 @@ module.exports = {
     await sql`UPDATE utilisateurs SET avatar_seed = ${avatarSeed} WHERE id = ${userId}`;
     return true;
   },
+  updateName: async (userId, nom) => {
+    await init();
+    await sql`UPDATE utilisateurs SET nom = ${nom} WHERE id = ${userId}`;
+    return true;
+  },
+  deleteUser: async (userId) => {
+    await init();
+    await sql`DELETE FROM progression WHERE utilisateur_id = ${userId}`;
+    await sql`DELETE FROM utilisateurs WHERE id = ${userId}`;
+    return true;
+  },
 
   getLecons: async () => {
     await init();

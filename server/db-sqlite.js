@@ -101,6 +101,15 @@ module.exports = {
     db.prepare("UPDATE utilisateurs SET avatar_seed = ? WHERE id = ?").run(avatarSeed, userId);
     return true;
   }),
+  updateName: wrap((userId, nom) => {
+    db.prepare("UPDATE utilisateurs SET nom = ? WHERE id = ?").run(nom, userId);
+    return true;
+  }),
+  deleteUser: wrap((userId) => {
+    db.prepare("DELETE FROM progression WHERE utilisateur_id = ?").run(userId);
+    db.prepare("DELETE FROM utilisateurs WHERE id = ?").run(userId);
+    return true;
+  }),
 
   getLecons: wrap(() => db.prepare("SELECT id, titre, resume, icone, ordre FROM lecons ORDER BY ordre").all()),
   getLeconById: wrap((id) => db.prepare("SELECT * FROM lecons WHERE id = ?").get(id)),

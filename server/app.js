@@ -73,6 +73,21 @@ app.patch("/api/me/avatar", requireAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
+app.patch("/api/me/name", requireAuth, async (req, res) => {
+  const { nom } = req.body || {};
+  if (!nom || typeof nom !== "string" || !nom.trim()) {
+    return res.status(400).json({ error: "Nom invalide." });
+  }
+  await db.updateName(req.userId, nom.trim().slice(0, 100));
+  res.json({ ok: true, nom: nom.trim().slice(0, 100) });
+});
+
+app.delete("/api/me", requireAuth, async (req, res) => {
+  await db.deleteUser(req.userId);
+  clearAuthCookie(res);
+  res.json({ ok: true });
+});
+
 // ─── Leçons ───
 
 app.get("/api/lessons", requireAuth, async (req, res) => {
