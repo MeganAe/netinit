@@ -77,7 +77,7 @@ function mountAuthedChrome(user) {
 }
 
 // ─── Nav publique (index/login/register) ───
-async function mountPublicNav() {
+async function mountPublicNav(showTools = true) {
   let user = null;
   try { user = await api("/api/me"); } catch (_) { user = null; }
   const slot = document.getElementById("public-nav-slot");
@@ -86,19 +86,24 @@ async function mountPublicNav() {
       ? `<a href="/dashboard.html" class="bg-primary text-on-primary font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors" data-i18n="nav.myDashboard">Mon tableau de bord</a>`
       : `<a href="/login.html" class="text-on-surface-variant hover:text-primary font-body text-sm hidden sm:inline" data-i18n="nav.login">Se connecter</a>
          <a href="/register.html" class="bg-primary text-on-primary font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-primary/90 transition-colors" data-i18n="nav.start">Commencer</a>`
-    ) + `
+    ) + (showTools ? `
       <button class="relative text-on-surface-variant hover:text-primary transition-colors p-2" id="notif-open-mobile" title="Notifications">
         <span class="material-symbols-outlined">notifications</span>
-        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full"></span>
+        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full notif-dot"></span>
       </button>
       <button class="text-on-surface-variant hover:text-primary transition-colors p-2" id="settings-open-mobile" title="Paramètres">
         <span class="material-symbols-outlined">settings</span>
-      </button>`;
+      </button>` : "");
   }
-  mountPanels(!!user);
+  if (showTools) mountPanels(!!user);
   mountRevealAnimations();
   applyLanguage(getLanguage());
   return user;
+}
+
+function updateNotifDotVisibility() {
+  const seen = localStorage.getItem("netinit-notif-seen") === "true";
+  document.querySelectorAll(".notif-dot").forEach((d) => { d.style.display = seen ? "none" : "block"; });
 }
 
 // ─── Panneaux Paramètres / Notifications (mode sombre, langue) ───
@@ -106,10 +111,16 @@ function mountPanels(showLogout = true) {
   const settingsBackdrop = document.getElementById("settings-backdrop");
   const notifBackdrop = document.getElementById("notif-backdrop");
   if (!settingsBackdrop && !notifBackdrop) return;
+  updateNotifDotVisibility();
 
   const openSettings = () => settingsBackdrop.classList.remove("hidden") || settingsBackdrop.classList.add("flex");
   const closeSettings = () => { settingsBackdrop.classList.add("hidden"); settingsBackdrop.classList.remove("flex"); };
-  const openNotif = () => notifBackdrop.classList.remove("hidden") || notifBackdrop.classList.add("flex");
+  const openNotif = () => {
+    notifBackdrop.classList.remove("hidden");
+    notifBackdrop.classList.add("flex");
+    localStorage.setItem("netinit-notif-seen", "true");
+    updateNotifDotVisibility();
+  };
   const closeNotif = () => { notifBackdrop.classList.add("hidden"); notifBackdrop.classList.remove("flex"); };
 
   ["settings-open-mobile", "settings-open-desktop"].forEach((id) => {

@@ -165,11 +165,7 @@
         <a href="/register.html" class="bg-primary text-on-primary font-bold px-7 py-3.5 rounded-lg hover:bg-primary/90 transition-all hover:shadow-lg font-body">Commencer gratuitement</a>
         <a href="#lecons" class="border border-outline text-on-background font-bold px-7 py-3.5 rounded-lg hover:bg-surface-container transition-colors font-body">Voir le programme</a>
       </div>
-      <div class="flex items-center gap-6 mt-10 text-sm text-on-surface-variant font-body">
-        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-lg text-success">check_circle</span> Gratuit</span>
-        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-lg text-success">check_circle</span> 8 modules</span>
-        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-lg text-success">check_circle</span> À votre rythme</span>
-      </div>
+      <p class="text-sm text-on-surface-variant font-body mt-8 max-w-sm">Gratuit, sans engagement. Reprenez là où vous vous êtes arrêté, sur n'importe quel appareil.</p>
     </div>
     <div class="browser-mockup rounded-xl overflow-hidden bg-surface-container-lowest float-slow" data-animate data-delay="150">
       <div class="flex items-center gap-2 px-4 py-3 bg-surface-container border-b border-outline-variant/60">
@@ -182,48 +178,40 @@
     </div>
   </section>
 
-  <section id="lecons" class="py-16" data-animate>
-    <div class="max-w-xl mb-12">
-      <h2 class="font-headline text-3xl md:text-4xl font-bold mb-4">Huit modules essentiels</h2>
-      <p class="text-on-surface-variant font-body">Un programme complet couvrant les compétences numériques les plus utiles au quotidien.</p>
-    </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5" id="preview-grid"></div>
-  </section>
-
-  <section class="py-16" data-animate>
-    <div class="max-w-xl mb-12">
-      <h2 class="font-headline text-3xl md:text-4xl font-bold">Comment ça marche</h2>
-    </div>
-    <div class="grid md:grid-cols-3 gap-8">
-      <div class="hover-lift">
-        <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-lg flex items-center justify-center mb-4">1</div>
-        <h3 class="font-headline text-xl font-bold mb-2">Créez votre profil</h3>
-        <p class="text-sm text-on-surface-variant font-body">Un compte en quelques clics, avec un avatar personnalisé et un suivi de progression individuel.</p>
+  <section id="lecons" class="py-16 border-t border-outline-variant/50" data-animate>
+    <div class="md:grid md:grid-cols-[1fr_1.6fr] md:gap-16">
+      <div class="mb-10 md:mb-0">
+        <h2 class="font-headline text-3xl md:text-4xl font-bold mb-4">Huit sujets, un seul objectif</h2>
+        <p class="text-on-surface-variant font-body leading-relaxed">Pas de remplissage : chaque module répond à une situation concrète — celle où l'on se sent perdu face à un écran, un formulaire ou un message suspect.</p>
       </div>
-      <div class="hover-lift">
-        <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-lg flex items-center justify-center mb-4">2</div>
-        <h3 class="font-headline text-xl font-bold mb-2">Apprenez à votre rythme</h3>
-        <p class="text-sm text-on-surface-variant font-body">Des leçons courtes et illustrées, accessibles dans l'ordre de votre choix.</p>
-      </div>
-      <div class="hover-lift">
-        <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-lg flex items-center justify-center mb-4">3</div>
-        <h3 class="font-headline text-xl font-bold mb-2">Validez vos acquis</h3>
-        <p class="text-sm text-on-surface-variant font-body">Un quiz après chaque module, un classement, et une progression toujours visible.</p>
-      </div>
+      <div class="divide-y divide-outline-variant/40" id="preview-grid"></div>
     </div>
   </section>
 
-  <section class="py-16 mb-8" data-animate>
-    <div class="bg-primary text-on-primary rounded-2xl px-8 md:px-16 py-14 text-center">
-      <h2 class="font-headline text-3xl md:text-4xl font-bold mb-4">Prêt à commencer ?</h2>
-      <p class="font-body text-white/85 max-w-md mx-auto mb-8">Rejoignez NetInit et développez des compétences numériques qui font la différence.</p>
-      <a href="/register.html" class="inline-block bg-white text-primary font-bold px-8 py-3.5 rounded-lg hover:bg-white/90 transition-colors font-body">Créer mon compte</a>
+  <section class="py-16 border-t border-outline-variant/50 grid md:grid-cols-2 gap-12 items-center" data-animate>
+    <div>
+      <h2 class="font-headline text-3xl md:text-4xl font-bold mb-5">Conçu pour qu'on s'y tienne</h2>
+      <p class="text-on-surface-variant font-body leading-relaxed mb-4">La plupart des tutoriels s'arrêtent au premier obstacle. NetInit découpe chaque sujet en une lecture de cinq minutes, suivie d'un quiz qui confirme — ou pas — que ça a été compris.</p>
+      <p class="text-on-surface-variant font-body leading-relaxed">Votre progression reste visible à tout moment, module par module, sans note qui tombe et sans jugement.</p>
     </div>
+    <div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-8">
+      <p class="font-headline text-5xl font-bold text-primary mb-1">4<span class="text-2xl text-on-surface-variant font-body">/8</span></p>
+      <p class="text-sm text-on-surface-variant font-body mb-6">modules terminés en moyenne par un nouvel apprenant durant sa première semaine</p>
+      <div class="signal-bars"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+    </div>
+  </section>
+
+  <section class="py-20 border-t border-outline-variant/50 text-center" data-animate>
+    <h2 class="font-headline text-3xl md:text-4xl font-bold mb-4">Commencez par le premier module.</h2>
+    <p class="font-body text-on-surface-variant max-w-md mx-auto mb-8">Cinq minutes de lecture, un quiz, et une base plus solide qu'avant. C'est aussi simple que ça.</p>
+    <a href="/register.html" class="inline-flex items-center gap-2 text-primary font-bold font-body text-lg border-b-2 border-primary pb-1 hover:gap-3 transition-all">
+      Créer mon compte <span class="material-symbols-outlined text-lg">arrow_forward</span>
+    </a>
   </section>
 
 </main>
 
-<footer class="border-t border-outline-variant/60 py-8 mt-16">
+<footer class="border-t border-outline-variant/60 py-8">
 <div class="max-w-6xl mx-auto px-6 text-center">
 <p class="text-xs text-on-surface-variant/70 font-body">© 2026 NetInit — netinit.vercel.app</p>
 </div>
@@ -297,7 +285,7 @@
 
 <script src="/js/common.js"></script>
 <script>
-  mountPublicNav();
+  mountPublicNav(false);
   const lessons = [
     { icone: "explore", titre: "Navigateur", resume: "Onglets, favoris, historique et navigation privée." },
     { icone: "search", titre: "Recherche", resume: "Trouvez l'information pertinente rapidement." },
@@ -308,14 +296,13 @@
     { icone: "shopping_cart", titre: "Achats en ligne", resume: "Payez en toute sécurité." },
     { icone: "videocam", titre: "Visioconférence", resume: "Réunions et collaboration à distance." },
   ];
-  document.getElementById("preview-grid").innerHTML = lessons.map((l) => `
-    <a href="/register.html" class="soft-shadow hover-lift bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 flex flex-col gap-3 hover:border-primary/50 transition-colors">
-      <div class="w-11 h-11 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center">
-        <span class="material-symbols-outlined text-xl">${l.icone}</span>
-      </div>
-      <div>
-        <h3 class="font-headline text-lg font-bold mb-1">${l.titre}</h3>
-        <p class="text-sm text-on-surface-variant font-body">${l.resume}</p>
+  document.getElementById("preview-grid").innerHTML = lessons.map((l, i) => `
+    <a href="/register.html" class="flex items-start gap-5 py-5 group">
+      <span class="font-headline text-2xl text-outline shrink-0 w-8 pt-0.5">${String(i + 1).padStart(2, "0")}</span>
+      <span class="material-symbols-outlined text-primary shrink-0 mt-1">${l.icone}</span>
+      <div class="flex-1">
+        <h3 class="font-headline text-lg font-bold group-hover:text-primary transition-colors">${l.titre}</h3>
+        <p class="text-sm text-on-surface-variant font-body mt-0.5">${l.resume}</p>
       </div>
     </a>
   `).join("");
