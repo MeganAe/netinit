@@ -4,7 +4,6 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Connexion — NetInit</title>
 <script>
-  // Applique le thème avant le premier rendu pour éviter le flash de contenu clair.
   if (localStorage.getItem("netinit-theme") === "dark" ||
       (!localStorage.getItem("netinit-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
     document.documentElement.classList.add("dark");
@@ -77,26 +76,26 @@
         html.dark .browser-mockup { border-color: #4a3f34; box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
         .soft-shadow { box-shadow: 0 2px 16px rgba(58,48,42,0.06); }
         html.dark .soft-shadow { box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
-        /* Barres de signal = progression */
+
         .signal-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
         .signal-bars i { display: block; width: 5px; border-radius: 2px; background: #d8d0c8; }
         .signal-bars i.on { background: #c2652a; }
         .signal-bars i:nth-child(1) { height: 7px; } .signal-bars i:nth-child(2) { height: 11px; }
         .signal-bars i:nth-child(3) { height: 15px; } .signal-bars i:nth-child(4) { height: 20px; }
-        /* Avatars */
+
         .avatar-option { border-radius: 9999px; border: 2px solid #d8d0c8; padding: 3px; cursor: pointer; background: #fff; transition: border-color .15s, transform .15s; }
         .avatar-option:hover { transform: translateY(-2px) scale(1.04); }
         .avatar-option.selected { border-color: #c2652a; box-shadow: 0 0 0 3px #fbe8d8; }
         .avatar-option img { width: 100%; height: 100%; border-radius: 9999px; display: block; }
-        /* Quiz options */
+
         .quiz-option { border: 1px solid #d8d0c8; border-radius: .75rem; padding: 14px 18px; cursor: pointer; transition: border-color .15s, background .15s, transform .1s; display: flex; align-items: center; gap: 12px; font-family: 'Manrope', sans-serif; }
         .quiz-option:hover { border-color: #c2652a; transform: translateX(2px); }
         .quiz-option.selected { border-color: #c2652a; background: #fbe8d8; }
         html.dark .quiz-option.selected { background: #4a2e18; }
-        /* Callout astuce */
+
         .callout { background: #fbe8d8; border-left: 3px solid #c2652a; border-radius: .5rem; padding: 16px 20px; display: flex; gap: 12px; }
         html.dark .callout { background: #3a2a1a; }
-        /* Prose leçon */
+
         .lesson-prose p { margin-bottom: 16px; line-height: 1.75; color: #4a4038; }
         html.dark .lesson-prose p { color: #cabfb2; }
         .lesson-prose h4 { font-family: 'EB Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-top: 28px; margin-bottom: 10px; color: #3a302a; }
@@ -110,7 +109,6 @@
         @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
         input:focus { outline: none; border-color: #c2652a !important; box-shadow: 0 0 0 3px #fbe8d8; }
 
-        /* ─── Dark mode : surfaces génériques ─── */
         html.dark .bg-background { background-color: #1c1712 !important; }
         html.dark .bg-surface-container-lowest { background-color: #26201a !important; }
         html.dark .bg-surface-container-low { background-color: #241e18 !important; }
@@ -125,7 +123,6 @@
         html.dark .text-on-surface-variant { color: #b3a898 !important; }
         html.dark .bg-primary-container\/30 { background-color: rgba(194,101,42,0.18) !important; }
 
-        /* ─── Animations d'apparition ─── */
         [data-animate] { opacity: 0; }
         [data-animate].in-view { animation: fadeSlideUp .7s cubic-bezier(.22,1,.36,1) forwards; }
         @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
@@ -138,7 +135,6 @@
           .float-slow { animation: none !important; }
         }
 
-        /* ─── Panneaux (paramètres / notifications) ─── */
         .panel-backdrop { background: rgba(28,23,18,0.4); backdrop-filter: blur(2px); }
         .panel-sheet { animation: sheetIn .25s cubic-bezier(.22,1,.36,1); }
         @keyframes sheetIn { from { opacity:0; transform: translateY(12px) scale(.98); } to { opacity:1; transform: translateY(0) scale(1); } }
@@ -190,7 +186,6 @@
 
 <script src="/js/common.js"></script>
 <script>
-  // Lance les animations d'apparition (évite que data-animate reste à opacity:0)
   mountRevealAnimations();
 
   const form = document.getElementById("login-form");

@@ -1,4 +1,4 @@
-// ─── Alertes (SweetAlert2), stylées selon le thème Sahara ───
+
 function swalTheme() {
   const dark = document.documentElement.classList.contains("dark");
   return {
@@ -27,8 +27,6 @@ function toastSuccess(text) {
     showConfirmButton: false, timer: 2200, timerProgressBar: true, ...swalTheme(),
   });
 }
-
-// ─── Client API ───
 async function api(path, options = {}) {
   const res = await fetch(path, {
     credentials: "include",
@@ -37,15 +35,10 @@ async function api(path, options = {}) {
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
   let data = null;
-  try { data = await res.json(); } catch (_) { /* réponse vide */ }
+  try { data = await res.json(); } catch (_) {  }
   if (!res.ok) throw new Error((data && data.error) || "Une erreur est survenue.");
   return data;
 }
-
-// ─── Avatars (DiceBear, style Micah) ───
-// Si aucun seed n'est fourni (comptes créés avant l'ajout des avatars),
-// on retombe sur un identifiant unique plutôt qu'un seed générique partagé,
-// pour que chaque utilisateur ait un avatar distinct dans le classement.
 function avatarUrl(seed, size = 64) {
   const s = seed && String(seed).trim() ? seed : `netinit-${Math.random().toString(36).slice(2, 8)}`;
   return `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(s)}&size=${size}&backgroundColor=fbe8d8,f2ece4,fce0e0`;
