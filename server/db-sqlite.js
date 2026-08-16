@@ -66,17 +66,43 @@ db.exec(`
     console.log(`[sqlite] Base initialisée : ${LECONS.length} leçons, ${QUIZ.flat().length} questions.`);
   } else {
     // Synchronise le contenu avec content.js (utile en dev si le fichier change).
-    const updateLecon = db.prepare("UPDATE lecons SET titre=?, resume=?, icone=?, contenu=?, astuce=? WHERE ordre=?");
+    // Upsert : met à jour une leçon existante (par ordre), ou la crée si elle
+    // n'existe pas encore (ex : nouvelle leçon ajoutée à content.js).
+    const insertLecon = db.prepare("INSERT INTO lecons (titre, resume, icone, contenu, astuce, ordre) VALUES (?, ?, ?, ?, ?, ?)");
+    const updateLecon = db.prepare("UPDATE lecons SET titre=?, resume=?, icone=?, contenu=?, astuce=? WHERE id=?");
     const deleteQuiz = db.prepare("DELETE FROM quiz WHERE lecon_id=?");
     const insertQuiz = db.prepare("INSERT INTO quiz (lecon_id, question, options, reponse_correcte) VALUES (?, ?, ?, ?)");
     const getIdByOrdre = db.prepare("SELECT id FROM lecons WHERE ordre=?");
+
     LECONS.forEach((l, i) => {
-      updateLecon.run(l.titre, l.resume, l.icone, l.contenu, l.astuce || "", l.ordre);
       const row = getIdByOrdre.get(l.ordre);
-      if (!row) return;
-      deleteQuiz.run(row.id);
-      QUIZ[i].forEach((q) => insertQuiz.run(row.id, q.q, JSON.stringify(q.options), q.r));
+      let leconId;
+      if (!row) {
+        const res = insertLecon.run(l.titre, l.resume, l.icone, l.contenu, l.astuce || "", l.ordre);
+        leconId = Number(res.lastInsertRowid);
+      } else {
+        leconId = row.id;
+        updateLecon.run(l.titre, l.resume, l.icone, l.contenu, l.astuce || "", leconId);
+      }
+      deleteQuiz.run(leconId);
+      QUIZ[i].forEach((q) => insertQuiz.run(leconId, q.q, JSON.stringify(q.options), q.r));
     });
+
+    // Supprime les leçons orphelines : présentes en base mais plus dans content.js.
+    const validOrdres = LECONS.map((l) => l.ordre);
+    const placeholders = validOrdres.map(() => "?").join(",");
+    const orphans = db.prepare(`SELECT id FROM lecons WHERE ordre NOT IN (${placeholders})`).all(...validOrdres);
+    if (orphans.length > 0) {
+      const deleteProg = db.prepare("DELETE FROM progression WHERE lecon_id=?");
+      const deleteQuizOrphan = db.prepare("DELETE FROM quiz WHERE lecon_id=?");
+      const deleteLecon = db.prepare("DELETE FROM lecons WHERE id=?");
+      orphans.forEach((o) => {
+        deleteProg.run(o.id);
+        deleteQuizOrphan.run(o.id);
+        deleteLecon.run(o.id);
+      });
+      console.log(`[sqlite] ${orphans.length} leçon(s) orpheline(s) supprimée(s).`);
+    }
   }
 })();
 

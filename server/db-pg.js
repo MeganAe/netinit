@@ -75,21 +75,47 @@ function init() {
         // Synchronise le contenu (texte des leçons + quiz) avec content.js à
         // chaque démarrage, pour que les mises à jour du contenu pédagogique
         // se propagent sans perdre les comptes ni la progression des étudiants.
+        // Upsert : met à jour une leçon existante (par ordre), ou la crée si
+        // elle n'existe pas encore (ex : nouvelle leçon ajoutée à content.js).
         for (let i = 0; i < LECONS.length; i++) {
           const l = LECONS[i];
           const { rows: existing } = await sql`SELECT id FROM lecons WHERE ordre = ${l.ordre}`;
-          if (existing.length === 0) continue;
-          const leconId = existing[0].id;
-          await sql`
-            UPDATE lecons SET titre = ${l.titre}, resume = ${l.resume}, icone = ${l.icone},
-                               contenu = ${l.contenu}, astuce = ${l.astuce || ""}
-            WHERE id = ${leconId}`;
+          let leconId;
+          if (existing.length === 0) {
+            const { rows: inserted } = await sql`
+              INSERT INTO lecons (titre, resume, icone, contenu, astuce, ordre)
+              VALUES (${l.titre}, ${l.resume}, ${l.icone}, ${l.contenu}, ${l.astuce || ""}, ${l.ordre})
+              RETURNING id`;
+            leconId = inserted[0].id;
+          } else {
+            leconId = existing[0].id;
+            await sql`
+              UPDATE lecons SET titre = ${l.titre}, resume = ${l.resume}, icone = ${l.icone},
+                                 contenu = ${l.contenu}, astuce = ${l.astuce || ""}
+              WHERE id = ${leconId}`;
+          }
           await sql`DELETE FROM quiz WHERE lecon_id = ${leconId}`;
           for (const q of QUIZ[i]) {
             await sql`
               INSERT INTO quiz (lecon_id, question, options, reponse_correcte)
               VALUES (${leconId}, ${q.q}, ${JSON.stringify(q.options)}, ${q.r})`;
           }
+        }
+
+        // Supprime les leçons orphelines : celles présentes en base mais qui
+        // n'existent plus dans content.js (ex : ancienne version du contenu,
+        // tentative de test précédente). Sans cette étape, ces leçons restent
+        // affichées indéfiniment sur le tableau de bord.
+        const validOrdres = LECONS.map((l) => l.ordre);
+        const { rows: orphans } = await sql`
+          SELECT id FROM lecons WHERE ordre != ALL(${validOrdres})`;
+        for (const o of orphans) {
+          await sql`DELETE FROM progression WHERE lecon_id = ${o.id}`;
+          await sql`DELETE FROM quiz WHERE lecon_id = ${o.id}`;
+          await sql`DELETE FROM lecons WHERE id = ${o.id}`;
+        }
+        if (orphans.length > 0) {
+          console.log(`[postgres] ${orphans.length} leçon(s) orpheline(s) supprimée(s).`);
         }
       }
     })();
