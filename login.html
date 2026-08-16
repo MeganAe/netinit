@@ -190,9 +190,13 @@
 
 <script src="/js/common.js"></script>
 <script>
+  // Lance les animations d'apparition (évite que data-animate reste à opacity:0)
+  mountRevealAnimations();
+
   const form = document.getElementById("login-form");
   const errorBox = document.getElementById("form-error");
   const submitBtn = document.getElementById("submit-btn");
+  const submitLabel = submitBtn.querySelector("span:first-child");
 
   const pwInput = document.getElementById("mot_de_passe");
   const pwToggle = document.getElementById("toggle-pw");
@@ -207,7 +211,7 @@
     e.preventDefault();
     errorBox.classList.add("hidden");
     submitBtn.disabled = true;
-    submitBtn.querySelector("span").textContent = "Connexion...";
+    submitLabel.textContent = "Connexion...";
 
     const email = document.getElementById("email").value.trim();
     const mot_de_passe = document.getElementById("mot_de_passe").value;
@@ -219,7 +223,7 @@
       errorBox.textContent = err.message;
       errorBox.classList.remove("hidden");
       submitBtn.disabled = false;
-      submitBtn.querySelector("span").textContent = "Se connecter";
+      submitLabel.textContent = "Se connecter";
     }
   });
 </script>
