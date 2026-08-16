@@ -15,6 +15,8 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Manrope:wght@300..800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -150,13 +152,13 @@
 </head>
 <body class="font-body">
 
-<header class="w-full px-6 md:px-12 py-5 flex items-center justify-between border-b border-outline-variant/60 bg-background">
-<a href="/index.html" class="font-headline text-2xl font-bold text-primary">NetInit</a>
-<a href="/index.html" class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">close</span></a>
-</header>
+<a href="/index.html" class="fixed top-6 right-6 z-50 w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors" title="Fermer">
+<span class="material-symbols-outlined">close</span>
+</a>
 
 <main class="max-w-md mx-auto px-6 py-16" data-animate>
   <div class="text-center mb-8">
+    <p class="font-headline text-2xl font-bold text-primary mb-6">NetInit</p>
     <h1 class="font-headline text-4xl font-bold mb-3">Créer un compte</h1>
     <p class="text-on-surface-variant font-body">Rejoignez NetInit et commencez votre apprentissage dès aujourd'hui.</p>
   </div>
@@ -184,7 +186,13 @@
       </div>
       <div class="mb-2">
         <label class="block text-sm font-bold font-body mb-2" for="mot_de_passe">Mot de passe</label>
-        <input class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body bg-background" id="mot_de_passe" type="password" placeholder="Au moins 6 caractères" required minlength="6"/>
+        <div class="relative">
+          <input class="w-full border border-outline-variant rounded-lg px-4 py-3 pr-11 font-body bg-background" id="mot_de_passe" type="password" placeholder="Au moins 6 caractères" required minlength="6"/>
+          <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary" id="toggle-pw" tabindex="-1" title="Afficher le mot de passe">
+            <span class="material-symbols-outlined text-xl">visibility</span>
+          </button>
+        </div>
+        <div class="flex gap-1 mt-2" id="pw-strength"></div>
       </div>
       <div class="text-sm text-error font-body mt-3 hidden" id="form-error"></div>
       <button class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-lg mt-6 hover:bg-primary/90 transition-all hover:shadow-lg font-body" id="submit-btn" type="submit">S'inscrire</button>
@@ -193,16 +201,8 @@
   </div>
 </main>
 
-<footer class="border-t border-outline-variant/60 py-8 mt-16">
-<div class="max-w-6xl mx-auto px-6 text-center">
-<p class="text-xs text-on-surface-variant/70 font-body">© 2026 NetInit — netinit.vercel.app</p>
-</div>
-</footer>
-
-
 <script src="/js/common.js"></script>
 <script>
-  mountPublicNav();
   let selectedSeed = null;
   function randomSeed() { return Math.random().toString(36).slice(2, 10); }
 
@@ -225,6 +225,33 @@
   }
   renderAvatarGrid();
   document.getElementById("avatar-reroll").addEventListener("click", renderAvatarGrid);
+
+  // ─── Afficher / masquer le mot de passe ───
+  const pwInput = document.getElementById("mot_de_passe");
+  const pwToggle = document.getElementById("toggle-pw");
+  pwToggle.addEventListener("click", () => {
+    const showing = pwInput.type === "text";
+    pwInput.type = showing ? "password" : "text";
+    pwToggle.querySelector(".material-symbols-outlined").textContent = showing ? "visibility" : "visibility_off";
+    pwToggle.title = showing ? "Afficher le mot de passe" : "Masquer le mot de passe";
+  });
+
+  // ─── Indicateur simple de robustesse du mot de passe ───
+  const strengthBox = document.getElementById("pw-strength");
+  pwInput.addEventListener("input", () => {
+    const v = pwInput.value;
+    let score = 0;
+    if (v.length >= 6) score++;
+    if (v.length >= 10) score++;
+    if (/[A-Z]/.test(v) && /[0-9]/.test(v)) score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+    const colors = ["bg-outline-variant", "bg-error", "bg-error", "bg-primary", "bg-success"];
+    const activeColor = v.length === 0 ? "bg-outline-variant" : colors[score];
+    strengthBox.innerHTML = Array.from({ length: 4 }, (_, i) => `
+      <span class="h-1 flex-1 rounded-full ${i < score || v.length === 0 ? (v.length === 0 ? "bg-outline-variant" : activeColor) : "bg-outline-variant"}"></span>
+    `).join("");
+  });
+  pwInput.dispatchEvent(new Event("input"));
 
   const form = document.getElementById("register-form");
   const errorBox = document.getElementById("form-error");

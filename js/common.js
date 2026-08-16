@@ -1,3 +1,33 @@
+// ─── Alertes (SweetAlert2), stylées selon le thème Sahara ───
+function swalTheme() {
+  const dark = document.documentElement.classList.contains("dark");
+  return {
+    background: dark ? "#26201a" : "#ffffff",
+    color: dark ? "#f0e9e0" : "#3a302a",
+    confirmButtonColor: "#c2652a",
+    cancelButtonColor: "#9a9088",
+    customClass: { popup: "font-body", title: "font-headline" },
+  };
+}
+function notifySuccess(title, text) {
+  return Swal.fire({ icon: "success", title, text, confirmButtonText: "OK", ...swalTheme() });
+}
+function notifyError(title, text) {
+  return Swal.fire({ icon: "error", title: title || "Une erreur est survenue", text, confirmButtonText: "OK", ...swalTheme() });
+}
+function confirmDanger(title, text, confirmText = "Confirmer") {
+  return Swal.fire({
+    icon: "warning", title, text, showCancelButton: true,
+    confirmButtonText: confirmText, cancelButtonText: "Annuler", ...swalTheme(),
+  }).then((r) => r.isConfirmed);
+}
+function toastSuccess(text) {
+  return Swal.fire({
+    toast: true, position: "top-end", icon: "success", title: text,
+    showConfirmButton: false, timer: 2200, timerProgressBar: true, ...swalTheme(),
+  });
+}
+
 // ─── Client API ───
 async function api(path, options = {}) {
   const res = await fetch(path, {
@@ -91,42 +121,21 @@ async function mountPublicNav() {
   return user;
 }
 
-function updateNotifDotVisibility() {
-  const seen = localStorage.getItem("netinit-notif-seen") === "true";
-  document.querySelectorAll(".notif-dot").forEach((d) => { d.style.display = seen ? "none" : "block"; });
-}
-
-// ─── Panneaux Paramètres / Notifications (mode sombre, langue) ───
+// ─── Panneau Paramètres (mode sombre) ───
 function mountPanels(showLogout = true) {
   const settingsBackdrop = document.getElementById("settings-backdrop");
-  const notifBackdrop = document.getElementById("notif-backdrop");
-  if (!settingsBackdrop && !notifBackdrop) return;
-  updateNotifDotVisibility();
+  if (!settingsBackdrop) return;
 
   const openSettings = () => settingsBackdrop.classList.remove("hidden") || settingsBackdrop.classList.add("flex");
   const closeSettings = () => { settingsBackdrop.classList.add("hidden"); settingsBackdrop.classList.remove("flex"); };
-  const openNotif = () => {
-    notifBackdrop.classList.remove("hidden");
-    notifBackdrop.classList.add("flex");
-    localStorage.setItem("netinit-notif-seen", "true");
-    updateNotifDotVisibility();
-  };
-  const closeNotif = () => { notifBackdrop.classList.add("hidden"); notifBackdrop.classList.remove("flex"); };
 
   ["settings-open-mobile", "settings-open-desktop"].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.addEventListener("click", openSettings);
   });
-  ["notif-open-mobile", "notif-open-desktop"].forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener("click", openNotif);
-  });
   const sClose = document.getElementById("settings-close");
   if (sClose) sClose.addEventListener("click", closeSettings);
   if (settingsBackdrop) settingsBackdrop.addEventListener("click", (e) => { if (e.target === settingsBackdrop) closeSettings(); });
-  const nClose = document.getElementById("notif-close");
-  if (nClose) nClose.addEventListener("click", closeNotif);
-  if (notifBackdrop) notifBackdrop.addEventListener("click", (e) => { if (e.target === notifBackdrop) closeNotif(); });
 
   if (!showLogout) {
     const lb = document.getElementById("settings-logout");
