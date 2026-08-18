@@ -4,6 +4,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Profil — NetInit</title>
 <script>
+  // Applique le thème avant le premier rendu pour éviter le flash de contenu clair.
   if (localStorage.getItem("netinit-theme") === "dark" ||
       (!localStorage.getItem("netinit-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
     document.documentElement.classList.add("dark");
@@ -76,26 +77,26 @@
         html.dark .browser-mockup { border-color: #4a3f34; box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
         .soft-shadow { box-shadow: 0 2px 16px rgba(58,48,42,0.06); }
         html.dark .soft-shadow { box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
-        
+        /* Barres de signal = progression */
         .signal-bars { display: flex; align-items: flex-end; gap: 3px; height: 20px; }
         .signal-bars i { display: block; width: 5px; border-radius: 2px; background: #d8d0c8; }
         .signal-bars i.on { background: #c2652a; }
         .signal-bars i:nth-child(1) { height: 7px; } .signal-bars i:nth-child(2) { height: 11px; }
         .signal-bars i:nth-child(3) { height: 15px; } .signal-bars i:nth-child(4) { height: 20px; }
-        
+        /* Avatars */
         .avatar-option { border-radius: 9999px; border: 2px solid #d8d0c8; padding: 3px; cursor: pointer; background: #fff; transition: border-color .15s, transform .15s; }
         .avatar-option:hover { transform: translateY(-2px) scale(1.04); }
         .avatar-option.selected { border-color: #c2652a; box-shadow: 0 0 0 3px #fbe8d8; }
         .avatar-option img { width: 100%; height: 100%; border-radius: 9999px; display: block; }
-        
+        /* Quiz options */
         .quiz-option { border: 1px solid #d8d0c8; border-radius: .75rem; padding: 14px 18px; cursor: pointer; transition: border-color .15s, background .15s, transform .1s; display: flex; align-items: center; gap: 12px; font-family: 'Manrope', sans-serif; }
         .quiz-option:hover { border-color: #c2652a; transform: translateX(2px); }
         .quiz-option.selected { border-color: #c2652a; background: #fbe8d8; }
         html.dark .quiz-option.selected { background: #4a2e18; }
-        
+        /* Callout astuce */
         .callout { background: #fbe8d8; border-left: 3px solid #c2652a; border-radius: .5rem; padding: 16px 20px; display: flex; gap: 12px; }
         html.dark .callout { background: #3a2a1a; }
-        
+        /* Prose leçon */
         .lesson-prose p { margin-bottom: 16px; line-height: 1.75; color: #4a4038; }
         html.dark .lesson-prose p { color: #cabfb2; }
         .lesson-prose h4 { font-family: 'EB Garamond', serif; font-weight: 700; font-size: 1.4rem; margin-top: 28px; margin-bottom: 10px; color: #3a302a; }
@@ -109,7 +110,7 @@
         @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
         input:focus { outline: none; border-color: #c2652a !important; box-shadow: 0 0 0 3px #fbe8d8; }
 
-        
+        /* ─── Dark mode : surfaces génériques ─── */
         html.dark .bg-background { background-color: #1c1712 !important; }
         html.dark .bg-surface-container-lowest { background-color: #26201a !important; }
         html.dark .bg-surface-container-low { background-color: #241e18 !important; }
@@ -124,9 +125,9 @@
         html.dark .text-on-surface-variant { color: #b3a898 !important; }
         html.dark .bg-primary-container\/30 { background-color: rgba(194,101,42,0.18) !important; }
 
-        
-        [data-animate] { opacity: 0; }
-        [data-animate].in-view { animation: fadeSlideUp .7s cubic-bezier(.22,1,.36,1) forwards; }
+        /* ─── Animations d'apparition ─── */
+        [data-animate].reveal-init { opacity: 0; }
+        [data-animate].reveal-init.in-view { animation: fadeSlideUp .7s cubic-bezier(.22,1,.36,1) forwards; }
         @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
         .float-slow { animation: floatSlow 6s ease-in-out infinite; }
         @keyframes floatSlow { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -137,7 +138,7 @@
           .float-slow { animation: none !important; }
         }
 
-        
+        /* ─── Panneaux (paramètres / notifications) ─── */
         .panel-backdrop { background: rgba(28,23,18,0.4); backdrop-filter: blur(2px); }
         .panel-sheet { animation: sheetIn .25s cubic-bezier(.22,1,.36,1); }
         @keyframes sheetIn { from { opacity:0; transform: translateY(12px) scale(.98); } to { opacity:1; transform: translateY(0) scale(1); } }
@@ -151,6 +152,8 @@
 </head>
 <body class="font-body bg-background">
 
+
+<!-- Mobile Top AppBar : nom de la plateforme à gauche, paramètres + notifications à droite -->
 <header class="md:hidden flex justify-between items-center w-full px-6 py-4 bg-background border-b border-outline-variant/60 sticky top-0 z-40">
 <a href="/dashboard.html" class="font-headline text-2xl font-bold text-primary">NetInit</a>
 <div class="flex items-center gap-2">
@@ -159,7 +162,7 @@
 </button>
 </div>
 </header>
-
+<!-- Desktop SideNav -->
 <nav class="hidden md:flex flex-col h-screen w-72 bg-surface border-r border-outline-variant/60 shadow-md fixed inset-y-0 left-0 z-50">
 <div class="p-6 border-b border-outline-variant/60">
 <div class="flex items-center justify-between mb-4">
@@ -191,7 +194,7 @@
 </button>
 </div>
 </nav>
-
+<!-- Mobile Bottom Navigation Bar -->
 <nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 bg-surface-container-low shadow-[0_-2px_16px_rgba(58,48,42,0.08)] z-50 rounded-t-xl pb-6">
 <a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/dashboard.html"><span class="material-symbols-outlined" style="">dashboard</span><span class="font-label text-xs uppercase tracking-wider mt-1">Tableau</span></a>
 <a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant rounded-xl px-4 py-1 transition-colors" href="/dashboard.html"><span class="material-symbols-outlined" style="">menu_book</span><span class="font-label text-xs uppercase tracking-wider mt-1">Leçons</span></a>
@@ -199,6 +202,7 @@
 <a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-4 py-1 transition-transform" href="/profile.html"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span><span class="font-label text-xs uppercase tracking-wider mt-1">Profil</span></a>
 </nav>
 
+<!-- Panneau Paramètres -->
 <div class="fixed inset-0 z-[100] hidden items-end sm:items-center justify-center panel-backdrop" id="settings-backdrop">
   <div class="bg-surface-container-lowest w-full sm:max-w-sm sm:rounded-xl rounded-t-2xl p-6 panel-sheet">
     <div class="flex items-center justify-between mb-6">
@@ -217,6 +221,7 @@
     </button>
   </div>
 </div>
+
 
 <main class="flex-1 md:ml-72 flex flex-col min-h-screen pb-20 md:pb-0">
 <div class="p-6 md:p-12 max-w-2xl mx-auto w-full flex-1">
@@ -323,6 +328,8 @@
         <p class="text-xs uppercase tracking-wider font-label text-on-surface-variant mt-1">Leçons</p>
       </div>
     `;
+
+    // ─── Badges de réussite (calculés à partir de la progression réelle) ───
     const badges = [
       { id: "start", icon: "flag", label: "Premier pas", unlocked: progress.leconsTerminees >= 1 },
       { id: "half", icon: "trending_up", label: "Mi-parcours", unlocked: progress.leconsTerminees >= 4 },
@@ -336,6 +343,8 @@
         <span class="text-xs font-bold font-body text-center">${b.label}</span>
       </div>
     `).join("");
+
+    // ─── Nom ───
     document.getElementById("name-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const btn = document.getElementById("save-name-btn");
@@ -349,6 +358,8 @@
       } catch (err) { notifyError("Oups", err.message); }
       finally { btn.disabled = false; }
     });
+
+    // ─── Avatar ───
     let selectedSeed = currentSeed;
     const saveAvatarBtn = document.getElementById("save-avatar-btn");
     function randomSeed() { return Math.random().toString(36).slice(2, 10); }
@@ -382,6 +393,8 @@
       } catch (err) { notifyError("Oups", err.message); }
       finally { saveAvatarBtn.textContent = "Enregistrer cet avatar"; }
     });
+
+    // ─── Mode sombre (toggle dupliqué directement dans la page profil) ───
     const darkToggleProfile = document.getElementById("dark-mode-toggle-profile");
     darkToggleProfile.classList.toggle("on", document.documentElement.classList.contains("dark"));
     darkToggleProfile.addEventListener("click", () => {
@@ -390,6 +403,8 @@
       localStorage.setItem("netinit-theme", nowDark ? "dark" : "light");
       darkToggleProfile.classList.toggle("on", nowDark);
     });
+
+    // ─── Suppression du compte ───
     document.getElementById("delete-account-btn").addEventListener("click", async () => {
       const ok = await confirmDanger(
         "Supprimer votre compte ?",
