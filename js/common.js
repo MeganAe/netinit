@@ -1,4 +1,4 @@
-
+// ─── Alertes (SweetAlert2), stylées selon le thème Sahara ───
 function swalTheme() {
   const dark = document.documentElement.classList.contains("dark");
   return {
@@ -27,6 +27,8 @@ function toastSuccess(text) {
     showConfirmButton: false, timer: 2200, timerProgressBar: true, ...swalTheme(),
   });
 }
+
+// ─── Client API ───
 async function api(path, options = {}) {
   const res = await fetch(path, {
     credentials: "include",
@@ -35,10 +37,15 @@ async function api(path, options = {}) {
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
   let data = null;
-  try { data = await res.json(); } catch (_) {  }
+  try { data = await res.json(); } catch (_) { /* réponse vide */ }
   if (!res.ok) throw new Error((data && data.error) || "Une erreur est survenue.");
   return data;
 }
+
+// ─── Avatars (DiceBear, style Micah) ───
+// Si aucun seed n'est fourni (comptes créés avant l'ajout des avatars),
+// on retombe sur un identifiant unique plutôt qu'un seed générique partagé,
+// pour que chaque utilisateur ait un avatar distinct dans le classement.
 function avatarUrl(seed, size = 64) {
   const s = seed && String(seed).trim() ? seed : `netinit-${Math.random().toString(36).slice(2, 8)}`;
   return `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(s)}&size=${size}&backgroundColor=fbe8d8,f2ece4,fce0e0`;
@@ -152,18 +159,31 @@ function mountPanels(showLogout = true) {
 function mountRevealAnimations() {
   const els = document.querySelectorAll("[data-animate]");
   if (!els.length) return;
-  if (!("IntersectionObserver" in window)) {
+
+  // Sécurité absolue : quoi qu'il arrive (script bloqué, erreur, navigateur
+  // ancien), le contenu redevient visible après 1,2s au plus tard. Le CSS ne
+  // masque désormais un élément QUE s'il porte la classe "reveal-init",
+  // ajoutée ici — donc si ce script ne s'exécute pas du tout, le contenu
+  // est visible par défaut (aucune classe ajoutée = aucune règle de masquage).
+  try {
+    if (!("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("in-view"));
+      return;
+    }
+    els.forEach((el) => el.classList.add("reveal-init"));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const delay = entry.target.getAttribute("data-delay") || 0;
+          setTimeout(() => entry.target.classList.add("in-view"), Number(delay));
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    els.forEach((el) => observer.observe(el));
+    setTimeout(() => els.forEach((el) => el.classList.add("in-view")), 1200);
+  } catch (_) {
+    els.forEach((el) => el.classList.remove("reveal-init"));
     els.forEach((el) => el.classList.add("in-view"));
-    return;
   }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const delay = entry.target.getAttribute("data-delay") || 0;
-        setTimeout(() => entry.target.classList.add("in-view"), Number(delay));
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  els.forEach((el) => observer.observe(el));
 }
